@@ -1,0 +1,39 @@
+{
+  "formato": "phytodiagnostix/1",
+  "titulo": "Banco de prácticas de la asignatura",
+  "autor": "Nombre y apellidos del profesor o profesora",
+  "fotos": [
+    {
+      "id": "prof-001",
+      "url": "fotos/xilema-01.jpg",
+      "modo": "anatomia",
+      "etiqueta": "xilema",
+      "titulo": "Corte transversal de tallo",
+      "aumento": "100x",
+      "tincion": "safranina–verde rápido",
+      "autoria": "Nombre del autor de la foto",
+      "licencia": "CC BY 4.0",
+      "nota": "Fíjate en el grosor de las paredes."
+    },
+    {
+      "id": "prof-002",
+      "commons": "Nombre del fichero en Commons.jpg",
+      "modo": "anatomia",
+      "etiqueta": "estomas",
+      "tambien": [
+        "epidermis"
+      ]
+    },
+    {
+      "id": "prof-003",
+      "url": "fotos/tomate-ca.jpg",
+      "modo": "deficiencia",
+      "etiqueta": "Ca",
+      "titulo": "Fruto de tomate con podredumbre apical",
+      "autoria": "Nombre",
+      "licencia": "CC BY-SA 4.0"
+    }
+  ],
+  "corrige": {},
+  "ocultar": []
+}
