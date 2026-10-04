@@ -4,6 +4,8 @@ Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y ban
 
 **Usar la app:** https://fborrasumh.github.io/phytodiagnostix/
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23142093.svg)](https://doi.org/10.5281/zenodo.23142093)
+
 ## Qué hace
 
 - **Banco de 60 fotos de Wikimedia Commons**: 57 de anatomía histológica (colénquima, parénquima, esclerénquima, xilema, floema, estomas, epidermis y meristemo) y 3 de deficiencia foliar (nitrógeno). Cada foto se pide a Commons al mostrarla; su autoría y licencia se leen de la ficha de Commons y se enseñan debajo de la foto.
@@ -54,7 +56,7 @@ ORCID: Fernando Borrás Rocher [0000-0002-5519-4573](https://orcid.org/0000-0002
 
 ## Cómo citar
 
-Borrás Rocher, F. (2026). *PhytoDiagnostix* (v1.0.0) [Software]. (DOI en trámite)
+Borrás Rocher, F. (2026). *PhytoDiagnostix* (v1.0.0) [Software]. DOI: [10.5281/zenodo.23142093](https://doi.org/10.5281/zenodo.23142093)
 
 ## Licencia
 
