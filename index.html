@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F2237">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: blob: https://commons.wikimedia.org https://upload.wikimedia.org 'self'; media-src blob: data:; connect-src https://api.openai.com https://generativelanguage.googleapis.com https://api.anthropic.com 'self' https://commons.wikimedia.org https://upload.wikimedia.org; worker-src blob: https://cdnjs.cloudflare.com; base-uri 'none'; form-action 'none'">
+<meta name="author" content="Fernando Borrás Rocher">
+<meta name="description" content="Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y banco propio del profesorado">
+<title>PhytoDiagnostix · Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y banco propio del profesorado</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --tinta:#0F2237; --acero:#2E4B6B; --acero-claro:#7C93AC; --gris:#5D7691;
+  --papel:#F3F6FA; --blanco:#FFFFFF; --linea:#D8E0E9; --linea-2:#E8EEF4;
+  --brasa:#E4572E; --brasa-osc:#C9441F; --brasa-suave:#FDEBE4;
+  --forjado:#0E7C6B; --forjado-suave:#E0F3EE; --aviso:#8A3617;
+  --c-ctx:#1F6FB2; --c-comp:#6B4FD8; --c-rda:#0E8C7A; --c-tema:#C98200; --c-eval:#E4572E; --c-final:#2E4B6B;
+  --sombra:0 1px 0 rgba(15,34,55,.05), 0 14px 34px -22px rgba(15,34,55,.45);
+  --sombra-alta:0 2px 0 rgba(15,34,55,.04), 0 22px 50px -24px rgba(15,34,55,.55);
+  --r:14px;
+  --display:"Bricolage Grotesque",Georgia,serif;
+  --texto:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--papel);color:var(--tinta);font-family:var(--texto);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-bottom:84px}
+a{color:var(--acero)}
+:focus-visible{outline:3px solid var(--brasa);outline-offset:2px;border-radius:6px}
+.hidden{display:none!important}
+svg.i{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+code{font-family:var(--mono);font-size:.85em;background:var(--linea-2);padding:1px 5px;border-radius:5px}
+
+/* Barra superior */
+.topbar{position:sticky;top:0;z-index:40;background:var(--tinta);color:#EAF1F7;box-shadow:0 6px 24px -14px rgba(0,0,0,.6)}
+.tb-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px}
+.logo{background:none;border:0;color:#fff;font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.03em;cursor:pointer;padding:2px 4px;display:flex;align-items:center;gap:8px}
+.logo em{font-style:normal;color:var(--brasa)}
+.logo .anv{width:30px;height:30px;border-radius:9px;background:var(--brasa);display:grid;place-items:center;color:#fff}
+.stepper{flex:1;display:flex;align-items:center;justify-content:center;min-width:0}
+.sdot{display:flex;align-items:center;gap:7px;background:none;border:0;color:#8FA7BE;font:600 13px var(--texto);padding:6px;cursor:pointer;border-radius:10px;white-space:nowrap}
+.sdot:disabled{cursor:not-allowed;opacity:.45}
+.sdot .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:2px solid #3E5C7D;font-size:12px;color:#A9C0D4;transition:all .2s}
+.sdot .n svg{width:14px;height:14px}
+.sdot[data-state="done"] .n{background:var(--forjado);border-color:var(--forjado);color:#fff}
+.sdot[data-state="now"]{color:#fff}
+.sdot[data-state="now"] .n{background:var(--brasa);border-color:var(--brasa);color:#fff;box-shadow:0 0 0 4px rgba(228,87,46,.25)}
+.sdot:not(:disabled):hover{background:rgba(255,255,255,.06)}
+.sline{flex:0 1 26px;height:2px;background:#2F4A68;min-width:6px}
+.sline.on{background:var(--forjado)}
+.tb-tools{display:flex;gap:6px}
+.tb-btn{background:transparent;border:1px solid #3E5C7D;color:#C9D8E6;border-radius:9px;padding:6px 10px;font:600 13px var(--texto);cursor:pointer;display:flex;align-items:center;gap:6px}
+.tb-btn:hover{border-color:var(--brasa);color:#fff}
+.progress{height:4px;background:#1E3550}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brasa),#F59E0B);transition:width .4s}
+@media(max-width:960px){.sdot .lbl{display:none}.sdot[data-state="now"] .lbl{display:inline}}
+@media(max-width:720px){
+  .tb-in{flex-wrap:wrap;gap:8px}
+  .stepper{order:3;flex-basis:100%;justify-content:space-between}
+  .sdot[data-state="now"] .lbl{display:none}
+  .tb-btn .lbl{display:none}
+}
+
+/* Pantallas */
+main{max-width:1180px;margin:0 auto;padding:26px 16px 40px}
+.screen{display:none}
+.screen.on{display:block}
+@media(prefers-reduced-motion:no-preference){.screen.on{animation:rise .35s cubic-bezier(.2,.7,.3,1) both}@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
+.sh{display:flex;gap:18px;align-items:flex-start;margin:4px 0 22px}
+.sh-ico{width:64px;height:64px;border-radius:18px;background:var(--c,var(--brasa));color:#fff;display:grid;place-items:center;flex:none;box-shadow:0 12px 24px -14px var(--c,var(--brasa))}
+.sh-ico svg{width:32px;height:32px}
+.sh-step{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acero-claro);margin:4px 0}
+.sh h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.025em;line-height:1.05;margin:0 0 6px}
+.sh-lede{margin:0;color:var(--gris);font-size:16.5px;max-width:70ch}
+@media(max-width:600px){.sh-ico{width:48px;height:48px;border-radius:14px}.sh-ico svg{width:24px;height:24px}}
+
+.card{background:var(--blanco);border:1px solid var(--linea);border-radius:var(--r);box-shadow:var(--sombra);padding:20px;margin-bottom:18px}
+.card h3{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.01em;margin:0 0 4px;display:flex;align-items:center;gap:9px}
+.card h3 .num{width:26px;height:26px;border-radius:8px;background:var(--tinta);color:#fff;font:700 13px var(--mono);display:grid;place-items:center}
+.card .sub{margin:0 0 14px;color:var(--gris);font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cols{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:20px;align-items:start}
+.sticky{position:sticky;top:96px}
+@media(max-width:900px){.cols{grid-template-columns:1fr}.sticky{position:static}}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+label,.lab{display:block;font-size:13.5px;font-weight:600;margin:0 0 6px;color:var(--acero)}
+label small,.lab small{font-weight:500;color:var(--acero-claro)}
+input[type=text],input[type=password],input[type=number],textarea,select{width:100%;padding:11px 13px;border:1.5px solid var(--linea);border-radius:10px;font-family:var(--texto);font-size:15px;color:var(--tinta);background:#fff;transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acero-claro);box-shadow:0 0 0 4px rgba(124,147,172,.18)}
+input.bad{border-color:var(--brasa);box-shadow:0 0 0 4px rgba(228,87,46,.15)}
+textarea{resize:vertical;min-height:96px;line-height:1.5}
+input::placeholder,textarea::placeholder{color:#9DB0C2}
+.field{margin-bottom:16px}
+.help{font-size:12.8px;color:var(--gris);margin:6px 0 0}
+.help b{color:var(--acero)}
+
+button{font-family:var(--texto);cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:11px;font-weight:600;font-size:15px;border:1.5px solid transparent;padding:11px 18px;transition:transform .08s,background .15s,border-color .15s;text-decoration:none;line-height:1.2}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--brasa);color:#fff;box-shadow:0 8px 18px -10px var(--brasa)}
+.btn-primary:hover{background:var(--brasa-osc)}
+.btn-big{font-size:17px;padding:14px 24px;border-radius:13px}
+.btn-dark{background:var(--tinta);color:#fff}
+.btn-dark:hover{background:#1c3656}
+.btn-ghost{background:#fff;border-color:var(--linea);color:var(--acero)}
+.btn-ghost:hover{border-color:var(--acero-claro);background:#F7FAFC}
+.btn-ok{background:var(--forjado);color:#fff}
+.btn-ok:hover{background:#0b6457}
+.btn-word{background:#2B579A;color:#fff}
+.btn-word:hover{background:#1e3f7a}
+.btn-sm{padding:7px 12px;font-size:13.5px;border-radius:9px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:#fff;border:1.5px solid var(--linea);border-radius:999px;padding:7px 13px;font-size:13.5px;color:var(--acero);cursor:pointer;display:inline-flex;align-items:center;gap:6px;line-height:1.25;text-align:left}
+.chip:hover{border-color:var(--brasa);color:var(--brasa)}
+.chip[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.chip.mini-ex{font-size:12.5px;padding:4px 10px;border-style:dashed}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1.5px solid var(--linea);background:#fff;border-radius:9px;padding:7px 11px;font-size:13.5px;font-weight:600;color:var(--acero)}
+.seg button:hover{border-color:var(--acero-claro)}
+.seg button[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+
+.meto{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.meto button{text-align:left;background:#fff;border:1.5px solid var(--linea);border-radius:12px;padding:10px 12px;color:var(--tinta)}
+.meto button b{display:block;font-size:14px}
+.meto button span{display:block;font-size:12.3px;color:var(--gris);line-height:1.35;margin-top:2px}
+.meto button:hover{border-color:var(--acero-claro)}
+.meto button[aria-pressed="true"]{border-color:var(--tinta);box-shadow:0 0 0 2px var(--tinta);background:var(--papel)}
+
+.tip{display:flex;gap:12px;background:#FFF8E6;border:1px solid #F3DDA0;border-radius:12px;padding:13px 15px;font-size:14px;color:#6B4E00;margin-bottom:18px}
+.tip svg{width:22px;height:22px;color:#C98200;flex:none;margin-top:1px}
+.tip strong{color:#523B00}
+.aviso{background:var(--brasa-suave);border:1px solid #F3C7B5;border-radius:12px;padding:13px 15px;font-size:14px;color:var(--aviso);margin-bottom:16px}
+.okbox{background:var(--forjado-suave);border:1px solid #A9DCCF;border-radius:12px;padding:13px 15px;font-size:14px;color:#0B5A4E;margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+
+/* Inicio */
+.hero{background:var(--tinta);color:#EAF1F7;border-radius:22px;padding:40px 36px;position:relative;overflow:hidden;margin-bottom:26px;box-shadow:var(--sombra-alta)}
+.hero::before{content:"";position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(228,87,46,.55),transparent 65%)}
+.hero::after{content:"";position:absolute;left:30%;bottom:-140px;width:420px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(14,140,122,.35),transparent 65%)}
+.hero>*{position:relative;z-index:1}
+@media(max-width:600px){.hero{padding:28px 20px;border-radius:18px}}
+.eyebrow{font:600 11.5px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#8FA7BE;margin:0 0 14px}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.4vw,58px);line-height:.98;letter-spacing:-.035em;margin:0 0 16px;max-width:17ch}
+.hero h1 em{font-style:normal;color:var(--brasa)}
+.hero p.lede{max-width:62ch;font-size:18px;color:#C3D3E2;margin:0 0 24px}
+.hero .actions .btn-ghost{background:transparent;color:#fff;border-color:#4A6787}
+.hero .actions .btn-ghost:hover{border-color:#fff}
+.draft{margin-top:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:14.5px}
+.sec-title{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.02em;margin:34px 0 6px}
+.sec-sub{color:var(--gris);margin:0 0 16px}
+.journey{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.jstop{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:16px;position:relative}
+.jstop .ji{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff;background:var(--c);margin-bottom:10px}
+.jstop .ji svg{width:20px;height:20px}
+.jstop b{display:block;font-size:15px;margin-bottom:2px}
+.jstop span{display:block;font-size:13px;color:var(--gris);line-height:1.45}
+.jstop .jn{position:absolute;top:12px;right:14px;font:700 12px var(--mono);color:var(--acero-claro)}
+@media(max-width:900px){.journey{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.journey{grid-template-columns:1fr}}
+
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.part{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--linea);border-radius:12px;padding:12px 14px}
+.part .pi{width:34px;height:34px;border-radius:10px;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);display:grid;place-items:center;flex:none}
+.part b{display:block;font-size:14.5px}
+.part span{display:block;font-size:12.8px;color:var(--gris);line-height:1.4}
+
+.examples{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.excard{background:#fff;border:1px solid var(--linea);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--sombra);position:relative;overflow:hidden;text-align:left;font:inherit;color:inherit;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.excard:hover{transform:translateY(-3px);box-shadow:var(--sombra-alta)}
+.excard::before{content:"";position:absolute;left:0;top:0;right:0;height:5px;background:var(--c)}
+.excard .emo{font-size:32px;line-height:1}
+.excard .area{font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--acero-claro)}
+.excard b{font-family:var(--display);font-size:18px;letter-spacing:-.01em;line-height:1.15}
+.excard p{margin:0;font-size:13.5px;color:var(--gris);flex:1}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff);border-radius:999px;padding:3px 9px;align-self:flex-start}
+
+/* Clave */
+.keyrow{display:flex;gap:8px}
+.keyrow input{flex:1;font-family:var(--mono);font-size:14px}
+.eye{width:46px;flex:none;border:1.5px solid var(--linea);background:#fff;border-radius:10px;color:var(--acero);display:grid;place-items:center}
+.light{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--papel);margin-top:14px;font-size:14.5px;font-weight:600}
+.light .bulbo{width:14px;height:14px;border-radius:50%;background:#B8C5D3;box-shadow:0 0 0 4px rgba(184,197,211,.3);flex:none}
+.light[data-s="ok"] .bulbo{background:#16A34A;box-shadow:0 0 0 4px rgba(22,163,74,.22)}
+.light[data-s="err"] .bulbo{background:var(--brasa);box-shadow:0 0 0 4px rgba(228,87,46,.22)}
+.light[data-s="wait"] .bulbo{background:#F59E0B;box-shadow:0 0 0 4px rgba(245,158,11,.25)}
+.olsteps{list-style:none;padding:0;margin:0;counter-reset:o;display:flex;flex-direction:column;gap:12px}
+.olsteps li{counter-increment:o;display:flex;gap:12px;font-size:14.5px;align-items:flex-start}
+.olsteps li::before{content:counter(o);width:28px;height:28px;border-radius:50%;background:var(--brasa-suave);color:var(--brasa);font:700 13px var(--mono);display:grid;place-items:center;flex:none}
+
+/* Acordeones */
+.acc{background:#fff;border:1px solid var(--linea);border-radius:var(--r);margin-bottom:12px;box-shadow:var(--sombra);overflow:hidden}
+.acc>summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px}
+.acc>summary::-webkit-details-marker{display:none}
+.acc>summary .ai{width:36px;height:36px;border-radius:10px;background:var(--papel);color:var(--acero);display:grid;place-items:center;flex:none}
+.acc[open]>summary .ai{background:var(--tinta);color:#fff}
+.acc>summary b{font-family:var(--display);font-size:17px;display:block}
+.acc>summary small{display:block;color:var(--gris);font-size:13px}
+.acc>summary .chev{margin-left:auto;transition:transform .2s;color:var(--acero-claro)}
+.acc[open]>summary .chev{transform:rotate(180deg)}
+.acc .inner{padding:4px 18px 18px;border-top:1px solid var(--linea-2)}
+.acc .inner>*:first-child{margin-top:14px}
+.prompt-ta{font-family:var(--mono);font-size:12.3px;min-height:130px;background:#FBFDFE}
+
+/* Resumen lateral */
+.sum h3{margin-bottom:10px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat{background:var(--papel);border-radius:12px;padding:10px 12px}
+.stat b{display:block;font:800 24px var(--display);letter-spacing:-.02em;line-height:1.1}
+.stat span{font-size:12.3px;color:var(--gris)}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.checks li{display:flex;gap:9px;align-items:center;color:var(--gris)}
+.checks li .ck{width:20px;height:20px;border-radius:50%;border:2px solid var(--linea);display:grid;place-items:center;flex:none}
+.checks li.on{color:var(--tinta)}
+.checks li.on .ck{background:var(--forjado);border-color:var(--forjado);color:#fff}
+.checks li .ck svg{width:12px;height:12px}
+.docname{margin-top:14px;padding:11px 13px;border-radius:11px;background:var(--tinta);color:#C3D3E2;font-size:13.5px}
+.docname b{color:#fff}
+
+/* Generación */
+.agents{display:flex;flex-direction:column;gap:10px}
+.agent{background:#fff;border:1px solid var(--linea);border-radius:var(--r);box-shadow:var(--sombra);overflow:hidden;transition:border-color .2s}
+.agent-h{display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer}
+.agent .ai{width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);display:grid;place-items:center;flex:none;transition:all .2s}
+.agent .ai svg{width:20px;height:20px}
+.agent-t{flex:1;min-width:0}
+.agent-t b{display:block;font-family:var(--display);font-size:16.5px}
+.agent-t span{display:block;font-size:13px;color:var(--gris)}
+.pill{font-size:12.5px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--linea-2);color:var(--gris);white-space:nowrap}
+.agent[data-s="run"]{border-color:#F59E0B}
+.agent[data-s="run"] .ai{background:var(--c);color:#fff;animation:pulse 1s infinite alternate}
+.agent[data-s="run"] .pill{background:#FFF1D6;color:#8A5A00}
+.agent[data-s="ok"] .ai{background:var(--c);color:#fff}
+.agent[data-s="ok"] .pill{background:var(--forjado-suave);color:var(--forjado)}
+.agent[data-s="err"]{border-color:var(--brasa)}
+.agent[data-s="err"] .pill{background:var(--brasa-suave);color:var(--brasa)}
+.agent-b{display:none;padding:4px 18px 16px 72px;font-size:14px;border-top:1px solid var(--linea-2);background:#FBFDFE}
+.agent.open .agent-b{display:block}
+@media(max-width:600px){.agent-b{padding-left:18px}}
+@keyframes pulse{from{transform:scale(1);box-shadow:0 0 0 0 rgba(228,87,46,.5)}to{transform:scale(1.06);box-shadow:0 0 0 10px rgba(228,87,46,0)}}
+.forging{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:14px;background:var(--tinta);color:#fff;margin-bottom:16px}
+.forging .spark{width:44px;height:44px;border-radius:12px;background:var(--brasa);display:grid;place-items:center;flex:none;animation:pulse 1s infinite alternate}
+.forging.done .spark{background:var(--forjado);animation:none}
+.forging.err .spark{animation:none}
+.forging b{font-family:var(--display);font-size:18px;display:block}
+.forging span{font-size:14px;color:#C3D3E2}
+.mini-list{margin:10px 0 0;padding:0;list-style:none}
+.mini-list li{padding:5px 0;border-bottom:1px solid var(--linea-2)}
+.mini-list li:last-child{border-bottom:0}
+.code{display:inline-block;font:700 11px var(--mono);border-radius:5px;padding:1px 6px;margin-right:6px;background:var(--linea-2);color:var(--acero)}
+
+/* Guía */
+.res-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.res-head h2{font-family:var(--display);font-weight:800;font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;margin:0;flex:1;min-width:240px;line-height:1.1}
+.doc{background:#fff;border:1px solid var(--linea);border-radius:18px;box-shadow:var(--sombra-alta);padding:40px 44px;max-width:900px;margin:0 auto}
+@media(max-width:700px){.doc{padding:22px 16px}}
+.doc-h{border-bottom:3px solid var(--tinta);padding-bottom:18px;margin-bottom:26px}
+.doc-kind{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--brasa);margin:0 0 6px}
+.doc-h h1{font-family:var(--display);font-weight:800;font-size:clamp(26px,3.4vw,36px);letter-spacing:-.025em;line-height:1.05;margin:0 0 12px}
+.meta{display:flex;flex-wrap:wrap;gap:6px}
+.meta span{font-size:12.8px;font-weight:600;background:var(--papel);color:var(--acero);border-radius:999px;padding:4px 11px}
+.dsec{margin-bottom:28px}
+.dsec h2{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.01em;margin:0 0 10px;display:flex;align-items:center;gap:10px}
+.dsec h2 .num{width:28px;height:28px;border-radius:8px;background:var(--tinta);color:#fff;font:700 13px var(--mono);display:grid;place-items:center;flex:none}
+.dsec p{margin:0 0 10px;max-width:75ch}
+.sublab{font-size:13px;font-weight:700;color:var(--acero-claro);margin:14px 0 6px}
+.row{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--linea-2);font-size:14.5px;align-items:flex-start}
+.row:last-child{border-bottom:0}
+.row .code{margin-top:2px;flex:none}
+.code.cg{background:#E6F0FA;color:var(--c-ctx)}
+.code.ce{background:#EEEAFB;color:var(--c-comp)}
+.code.bl{background:var(--forjado-suave);color:var(--forjado)}
+.code.tm{background:var(--tinta);color:#fff}
+.row .hrs{margin-left:auto;font-size:12.5px;color:var(--gris);white-space:nowrap}
+.blk{font-weight:700;margin:16px 0 4px;display:flex;gap:8px;align-items:baseline}
+.blk small{font-weight:500;color:var(--gris)}
+.tbl-wrap{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{background:var(--tinta);color:#fff;text-align:left;padding:9px 11px;font-size:12.5px;font-weight:700}
+table.t td{padding:9px 11px;border-bottom:1px solid var(--linea-2);vertical-align:top}
+table.t tr:nth-child(even) td{background:#FAFCFE}
+.peso{font-weight:800;color:var(--brasa);white-space:nowrap}
+.note{margin-top:12px;padding:11px 14px;background:var(--papel);border-left:4px solid var(--forjado);border-radius:8px;font-size:14px}
+.demo-flag{background:#FFF8E6;border:1px solid #F3DDA0;color:#6B4E00;border-radius:12px;padding:11px 15px;font-size:14px;margin:0 auto 16px;max-width:900px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.demo-flag svg{color:#C98200}
+
+/* Navegación inferior */
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:35;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--linea)}
+.bn-in{max-width:1180px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.bn-hint{flex:1;text-align:center;font-size:14px;color:var(--gris)}
+.bn-hint b{color:var(--tinta)}
+@media(max-width:600px){.bn-hint{display:none}.bn-in{justify-content:space-between}}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(15,34,55,.55);display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto}
+.modal.on{display:flex}
+.modal-box{background:#fff;border-radius:18px;max-width:760px;width:100%;box-shadow:var(--sombra-alta);overflow:hidden}
+.modal-head{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--tinta);color:#fff}
+.modal-head h2{font-family:var(--display);font-size:22px;margin:0;flex:1}
+.modal-head button{background:transparent;border:1px solid #4A6787;color:#fff;border-radius:9px;padding:6px 10px}
+.modal-body{padding:18px 20px 22px}
+.glos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.glos{grid-template-columns:1fr}}
+.glos div{background:var(--papel);border-radius:12px;padding:12px 14px}
+.glos b{display:block;font-family:var(--display);font-size:16px;margin-bottom:2px}
+.glos span{font-size:13.8px;color:var(--acero)}
+.hist{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;margin-bottom:8px}
+.hist-t{flex:1;min-width:0;cursor:pointer}
+.hist-t b{display:block;font-size:15px}
+.hist-t span{font-size:12.8px;color:var(--gris)}
+.hist:hover{border-color:var(--acero-claro)}
+.iconbtn{width:34px;height:34px;border-radius:9px;border:1.5px solid var(--linea);background:#fff;color:var(--acero);display:grid;place-items:center;padding:0}
+.iconbtn:hover{border-color:var(--brasa);color:var(--brasa)}
+.empty{text-align:center;color:var(--gris);padding:30px 10px}
+
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:var(--tinta);color:#fff;padding:11px 18px;border-radius:12px;font-size:14.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:70;max-width:90vw;text-align:center;box-shadow:var(--sombra-alta)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 30px;font-size:13px;color:#6E8299}
+footer hr{border:0;border-top:1px solid var(--linea);margin:0 0 14px}
+
+@media print{
+  body{background:#fff;padding:0}
+  .topbar,.bottomnav,.res-head,.demo-flag,.okbox,footer,.toast,.modal{display:none!important}
+  main{padding:0;max-width:none}
+  .screen{display:none!important}
+  
+  .doc{box-shadow:none;border:0;padding:0;max-width:none}
+  .dsec{break-inside:avoid-page}
+  table.t th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+/* ══ v2 ══ */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:640px){.grid3{grid-template-columns:1fr}}
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:960px){.feats{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.feats{grid-template-columns:1fr}}
+.feat{background:#fff;border:1px solid var(--linea);border-radius:14px;padding:16px;border-top:4px solid var(--c)}
+.feat .pi{width:38px;height:38px;border-radius:11px;background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c);display:grid;place-items:center;margin-bottom:10px}
+.feat b{display:block;font-family:var(--display);font-size:17px;margin-bottom:3px}
+.feat span{display:block;font-size:13.5px;color:var(--gris);line-height:1.45}
+.importbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--tinta);color:#EAF1F7;border-radius:var(--r);padding:14px 16px;margin-bottom:18px}
+.importbar .pi{width:40px;height:40px;border-radius:11px;background:var(--brasa);display:grid;place-items:center;flex:none}
+.importbar b{display:block;font-size:15px}
+.importbar span{display:block;font-size:13.3px;color:#A9C0D4}
+.importbar .btn-dark{background:#fff;color:var(--tinta)}
+.importbar .btn-dark:hover{background:#EAF1F7}
+.inacc{border-top:1px solid var(--linea-2);margin-top:4px;padding-top:12px}
+.inacc>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--acero)}
+.inacc>summary::-webkit-details-marker{display:none}
+.inacc>summary .chev{margin-left:auto;transition:transform .2s;color:var(--acero-claro)}
+.inacc[open]>summary .chev{transform:rotate(180deg)}
+.rec{display:inline-block;font:700 11px var(--texto);background:var(--forjado-suave);color:var(--forjado);border-radius:999px;padding:2px 8px;vertical-align:2px;margin-left:4px}
+.checkgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.checkgrid{grid-template-columns:1fr}}
+.checkgrid label{display:flex;gap:9px;align-items:center;margin:0;padding:9px 11px;border-radius:10px;background:var(--papel);font-weight:500;color:var(--tinta);cursor:pointer;font-size:14px}
+.checkgrid input{width:18px;height:18px;accent-color:var(--forjado);margin:0}
+.checkgrid label:has(input:checked){background:var(--forjado-suave)}
+.drop{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;border:2px dashed var(--linea);border-radius:14px;padding:24px;cursor:pointer;color:var(--acero);margin:0;font-weight:500}
+.drop svg{width:30px;height:30px;color:var(--brasa)}
+.drop b{font-size:15px;color:var(--tinta)}
+.drop span{font-size:13px;color:var(--gris)}
+.drop.over,.drop:hover{border-color:var(--brasa);background:var(--brasa-suave)}
+
+
+/* ══ Estilos propios de la app (se añaden a forja-base.css). Prefijo fa- para no chocar con clases de Forja ══ */
+.logo .anv{background:linear-gradient(135deg,var(--brasa),#C98200)}
+.hero{padding:44px 38px 30px}.hero h1{max-width:20ch}.fa-inicio{margin:14px 0 0;font-size:14px;color:#C3D3E2}.fa-inicio:empty{display:none}.fa-inicio b{color:#fff}
+/* autores con ORCID */
+.fa-autores{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14)}.fa-autores-cap{font:600 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#8FA7BE;width:100%;margin-bottom:-4px}
+.fa-autor{display:flex;gap:11px;align-items:center}.fa-autor b{display:block;color:#fff;font:700 16px var(--display)}.fa-autor small{display:block;color:#9DB6CD;font-size:12.5px;max-width:34ch}.fa-av{width:44px;height:44px;border-radius:14px;background:var(--c);color:#fff;display:grid;place-items:center;font:800 15px var(--display);flex:none;box-shadow:0 10px 20px -12px var(--c)}.fa-x{font:300 26px var(--display);color:#5D7C9B}
+.fa-orcid{display:block;margin-top:2px;font:600 11.5px var(--mono);letter-spacing:.02em;color:#7FD6C4!important;text-decoration:none}.fa-orcid:hover{text-decoration:underline}.fa-idea{width:100%;margin:2px 0 0;font-size:13px;color:#9DB6CD;max-width:72ch}
+/* zonas «dónde va cada cosa» */
+.zonas{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.zonas{grid-template-columns:1fr}}.zona{border-radius:16px;padding:14px 16px;border:2px solid}.zona.l{border-color:#9FD9C4;background:var(--forjado-suave)}.zona.n{border-color:#E9C46A;background:#FFF8E6}.zona h4{margin:0 0 6px;font-family:var(--display);font-size:18px}.zona ul{margin:0;padding-left:18px;font-size:14px;line-height:1.7}
+.sec-title+.zonas,.sec-title+.journey{margin-top:14px}
+/* formularios y utilidades */
+.field input[type=text],.field input[type=number],.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--linea);border-radius:10px;font:15px var(--texto);background:#fff;color:var(--tinta)}.field textarea{line-height:1.55;resize:vertical}.field label{display:block;font:700 13px var(--texto);color:var(--acero);margin-bottom:5px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brasa);box-shadow:0 0 0 3px rgba(228,87,46,.18)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:760px){.grid3,.grid2{grid-template-columns:1fr}}
+.card .actions{margin-top:12px}.card h3{margin-top:0}.fa-chk{display:flex;gap:8px;align-items:center;font:500 14.5px var(--texto);cursor:pointer}
+.fa-chip{display:inline-block;font:700 11.5px var(--texto);border-radius:999px;padding:3px 10px;background:var(--linea-2);color:var(--acero)}.fa-chip.ok{background:var(--forjado-suave);color:#0B5A4E}.fa-chip.aviso{background:#FFF1D6;color:#7A4B00}.fa-chip.error{background:var(--brasa-suave);color:var(--aviso)}
+.fa-pre{white-space:pre-wrap;font:12.5px/1.5 var(--mono);background:#0B1C2E;color:#D6E4F0;border-radius:12px;padding:12px;max-height:300px;overflow:auto}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--linea);border-top-color:var(--brasa);border-radius:50%;animation:fa-s .8s linear infinite;vertical-align:-2px}@keyframes fa-s{to{transform:rotate(360deg)}}
+.fa-foot{max-width:1180px;margin:10px auto 0;padding:0 16px 110px}.fa-foot hr{border:0;border-top:1px solid var(--linea);margin:0 0 16px}.fa-foot p{margin:0;font-size:12.8px;color:#6E8299;max-width:76ch;line-height:1.55}
+.glos div{display:block;margin-bottom:12px}.glos b{display:block}
+table{border-collapse:collapse;width:100%;font-size:13.8px}th{background:var(--papel);color:var(--acero);font:700 11px var(--mono);letter-spacing:.07em;text-transform:uppercase;text-align:left}td,th{padding:10px 12px;border-bottom:1px solid var(--linea-2);vertical-align:top}.table-wrap{overflow-x:auto}
+/* barra superior con muchos pasos: solo el actual lleva nombre (evita desbordes) */
+.tb-in{gap:10px}.stepper{min-width:0;flex:1 1 auto;justify-content:center;gap:2px}.sdot:not([data-state="now"]) .lbl{display:none}.sdot{padding-left:4px;padding-right:4px}.sline{min-width:8px;flex:0 1 22px}.logo,.tb-tools{flex:none}
+@media(max-width:900px){.tb-btn .lbl{display:none}}@media(max-width:720px){.hero{padding:28px 20px 24px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ══ PhytoDiagnostix (prefijo ph-) ══ */
+.logo .anv{background:linear-gradient(135deg,#0E7C6B,#2E9B5A)}
+.ph-bar{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;justify-content:space-between}.ph-origen{min-width:200px;margin:0}
+.ph-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px}.ph-gal-s{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.ph-th{position:relative;border:1.5px solid var(--linea);background:#fff;border-radius:14px;padding:0;overflow:hidden;cursor:pointer;display:block;text-align:left;transition:transform .15s,box-shadow .15s,border-color .15s}
+.ph-th:hover,.ph-th:focus-visible{transform:translateY(-2px);box-shadow:var(--sombra);border-color:var(--brasa);outline:none}
+.ph-im{display:block;aspect-ratio:4/3;background:#EAF0F6;overflow:hidden;position:relative}.ph-im img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-sin{background:repeating-linear-gradient(45deg,#EEF2F7,#EEF2F7 10px,#E4EAF2 10px,#E4EAF2 20px)}.ph-sin::after{content:'Foto no disponible (¿sin conexión?)';display:grid;place-items:center;text-align:center;padding:10px;color:var(--gris);font:600 12.5px var(--texto);min-height:90px;position:absolute;inset:0}
+figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
+.ph-n{position:absolute;left:8px;top:8px;background:rgba(15,34,55,.82);color:#fff;border-radius:8px;padding:2px 8px;font:700 12px var(--mono)}
+.ph-mk{position:absolute;right:8px;top:8px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}.ph-mk.ok{background:var(--forjado)}.ph-mk.ko{background:var(--brasa)}
+.ph-or{position:absolute;left:8px;bottom:8px;background:#1F6FB2;color:#fff;border-radius:8px;padding:1px 7px;font:700 11px var(--texto)}
+.ph-obs{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}@media(max-width:900px){.ph-obs{grid-template-columns:minmax(0,1fr)}}
+.ph-fig{position:sticky;top:76px}@media(max-width:900px){.ph-fig{position:static}}
+.ph-fig figure{margin:0;position:relative}.ph-fig img{width:100%;max-height:520px;object-fit:contain;border-radius:12px;background:#0B1C2E;display:block}.ph-fig figcaption{font:600 12px var(--mono);color:var(--gris);margin-top:8px}
+.ph-ops{display:flex;flex-wrap:wrap;gap:8px}
+.ph-op{border:1.5px solid var(--linea);background:#fff;border-radius:999px;padding:8px 14px;font:600 14px var(--texto);color:var(--acero);cursor:pointer}.ph-op:hover{border-color:var(--acero-claro)}.ph-op[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:#fff}
+.ph-obsl{display:grid;gap:8px}.ph-ob{align-items:flex-start;font-weight:500}.ph-ob input{margin-top:3px}
+.ph-res{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:20px;align-items:start}@media(max-width:760px){.ph-res{grid-template-columns:minmax(0,1fr)}}
+.ph-bth{margin:0;position:relative}.ph-bth img{width:100%;border-radius:12px;display:block;background:#0B1C2E}
+.ph-ficha{background:var(--papel);border:1px solid var(--linea-2);border-radius:12px;padding:12px 14px;margin:8px 0}.ph-ficha p{margin:4px 0 6px}
+.ph-ul{margin:6px 0 6px 20px;padding:0}.ph-ul li{margin:4px 0}.ph-ol{margin:6px 0 10px 20px;padding:0}.ph-ol li{margin:6px 0}
+.ph-envio{max-width:100%;max-height:240px;border-radius:10px;margin:8px 0;display:block}
+.ph-zoom{max-width:min(96vw,1100px)}.ph-zoom img{width:100%;height:auto;max-height:78vh;object-fit:contain;background:#0B1C2E;border-radius:10px;display:block}
+.ph-busca{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) auto;gap:12px;align-items:end}@media(max-width:760px){.ph-busca{grid-template-columns:minmax(0,1fr)}}
+.ph-bus{border:1px solid var(--linea);border-radius:12px;padding:8px;display:grid;gap:6px;background:#fff}.ph-bus small{overflow-wrap:anywhere}.ph-bus select{width:100%;padding:6px;border:1.5px solid var(--linea);border-radius:8px}
+.ph-mini{display:block;width:72px;aspect-ratio:4/3;border-radius:8px;overflow:hidden;background:#EAF0F6;position:relative}.ph-mini img{width:100%;height:100%;object-fit:cover}
+#revision{max-height:520px;overflow:auto}#revision th{position:sticky;top:0;z-index:1}#revision select{padding:6px;border:1.5px solid var(--linea);border-radius:8px}
+.fa-chip.ph-warn{background:var(--brasa-suave);color:var(--aviso)}
+.ph-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.ph-stats div{background:var(--papel);border-radius:12px;padding:12px 14px}.ph-stats b{display:block;font:800 28px var(--display);color:var(--tinta)}.ph-stats span{font-size:13px;color:var(--gris)}
+.ph-bar-row{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 44px;gap:10px;align-items:center;margin:8px 0;font-size:14px}.ph-track{display:block;height:12px;border-radius:99px;background:var(--linea-2);overflow:hidden}.ph-track span{display:block;height:100%;background:var(--forjado)}
+.ph-bar-row small{color:var(--gris);text-align:right}
+@media(max-width:600px){.ph-gal{grid-template-columns:repeat(2,minmax(0,1fr))}.ph-bar-row{grid-template-columns:minmax(0,100px) minmax(0,1fr) 40px}}
+</style></head>
+<body>
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></symbol>
+  <symbol id="i-quiz" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8M13 12h8M13 18h8"/></symbol>
+  <symbol id="i-cards" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+  <symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 3v4M17 5h4M5 17v4M3 19h4"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></symbol>
+</svg>
+
+<div class="topbar">
+  <div class="tb-in">
+    <button class="logo" id="goHome" type="button" aria-label="Inicio"><span class="anv"><svg class="i"><use href="#i-leaf"/></svg></span><span>PhytoDiagnostix</span></button>
+    <nav class="stepper" id="stepper" aria-label="Pasos"></nav>
+    <div class="tb-tools"><button class="tb-btn" id="btnProg" type="button" aria-label="Mi progreso"><svg class="i"><use href="#i-target"/></svg><span class="lbl">Progreso</span></button><button class="tb-btn" id="btnProf" type="button" aria-label="Profesorado"><svg class="i"><use href="#i-user"/></svg><span class="lbl">Profesorado</span></button><button class="tb-btn" id="btnIA" type="button"><svg class="i"><use href="#i-key"/></svg><span class="lbl">IA</span></button><button class="tb-btn" id="btnHelp" type="button"><svg class="i"><use href="#i-help"/></svg><span class="lbl">Ayuda</span></button></div>
+  </div>
+  <div class="progress"><span id="progBar"></span></div>
+</div>
+
+<main id="app">
+<!-- 0 · INICIO: portada con el qué, el para quién y los autores -->
+<section class="screen" data-step="0">
+  <div class="hero">
+    <p class="eyebrow">Anatomía y fisiología vegetal · Universidad Miguel Hernández de Elche</p>
+    <h1>Aprende a <em>reconocer tejidos y carencias</em> mirando fotos reales</h1>
+    <p class="lede">Más de 50 microfotografías de licencia libre, etiquetadas y con su autoría. Eliges qué estructura ves; el código comprueba si aciertas y la IA, si quieres, te explica por qué. El profesorado puede añadir sus propias fotos con un fichero JSON.</p>
+    <div class="actions"><button class="btn btn-primary btn-big" id="btnStart" type="button"><svg class="i"><use href="#i-play"/></svg>Empezar</button><button class="btn btn-ghost btn-big" id="btnEjemplo" type="button"><svg class="i"><use href="#i-eye"/></svg>Ver un ejemplo</button></div>
+    <p class="fa-inicio" id="inicioProj"></p>
+    <div class="fa-autores"><span class="fa-autores-cap">Realizada por</span>
+      <div class="fa-autor"><span class="fa-av" style="--c:#E4572E">FB</span><div><b>Fernando Borrás Rocher</b><small>Universidad Miguel Hernández de Elche</small><a class="fa-orcid" href="https://orcid.org/0000-0002-5519-4573" target="_blank" rel="noopener">ORCID 0000-0002-5519-4573</a></div></div>
+      <p class="fa-idea">Parte del prototipo PhytoDiagnostix v1.0 (evaluación de microfotografías con IA), ampliado con banco de fotos de licencia libre, corrección por código y banco propio del profesorado.</p></div>
+  </div>
+  <h2 class="sec-title">Cómo funciona</h2>
+  <div class="journey" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+    <div class="jstop" style="--c:#6B4FD8"><span class="jn">1</span><div class="ji"><svg class="i"><use href="#i-eye"/></svg></div><b>Eliges una foto</b><span>Del banco de Wikimedia Commons, del de tu profesorado o una tuya.</span></div>
+    <div class="jstop" style="--c:#E4572E"><span class="jn">2</span><div class="ji"><svg class="i"><use href="#i-pencil"/></svg></div><b>Observas y respondes</b><span>Marcas los rasgos que ves y dices qué tejido o qué carencia es.</span></div>
+    <div class="jstop" style="--c:#0E8C7A"><span class="jn">3</span><div class="ji"><svg class="i"><use href="#i-check"/></svg></div><b>El código corrige</b><span>La respuesta se compara con la etiqueta de la foto. La IA, si quieres, da una segunda opinión.</span></div>
+  </div>
+  <h2 class="sec-title">Dónde va cada cosa</h2>
+  <div class="zonas"><div class="zona l"><h4>Siempre en tu navegador</h4><ul><li>Tus respuestas y tu progreso</li><li>Tu clave de IA y tus fotos propias</li><li>La corrección: la hace el código, sin IA</li></ul></div>
+    <div class="zona n"><h4>Sale hacia fuera</h4><ul><li>A Wikimedia Commons: la petición de cada foto y de su ficha (autoría y licencia)</li><li>A tu proveedor de IA, solo si pides la segunda opinión: la foto y tu descripción, tras confirmar lo que sale</li></ul></div></div>
+</section>
+
+<!-- 1 · ELEGIR FOTO -->
+<section class="screen" data-step="1">
+  <header class="sh" style="--c:#6B4FD8"><div class="sh-ico"><svg class="i"><use href="#i-eye"/></svg></div><div><p class="sh-step">Paso 1 de 3</p><h2>Elige una foto</h2><p class="sh-lede">Las fotos no muestran su etiqueta: tendrás que decidir tú qué ves. Después el código te dirá si has acertado.</p></div></header>
+  <div class="card">
+    <div class="ph-bar">
+      <div class="seg" id="segModo" role="group" aria-label="Tipo de práctica"><button type="button" data-modo="anatomia" aria-pressed="true">Anatomía histológica</button><button type="button" data-modo="deficiencia" aria-pressed="false">Deficiencia foliar</button></div>
+      <div class="field ph-origen"><label for="selOrigen">Fotos de</label><select id="selOrigen"><option value="todas">Todas</option><option value="commons">Wikimedia Commons</option><option value="profesor">Mi profesorado</option></select></div>
+    </div>
+    <p class="help" id="galInfo"></p>
+    <div class="actions"><button class="btn btn-primary" id="btnAzar" type="button"><svg class="i"><use href="#i-refresh"/></svg>Foto al azar</button><button class="btn btn-ghost" id="btnRepaso" type="button"><svg class="i"><use href="#i-target"/></svg>Repasar lo que fallo</button><button class="btn btn-ghost" id="btnPropia" type="button"><svg class="i"><use href="#i-upload"/></svg>Subir mi microfotografía</button><input type="file" id="filePropia" accept="image/jpeg,image/png,image/webp" hidden></div>
+  </div>
+  <div class="ph-gal" id="galeria" aria-label="Banco de fotos"></div>
+</section>
+
+<!-- 2 · OBSERVAR Y RESPONDER -->
+<section class="screen" data-step="2">
+  <header class="sh" style="--c:#E4572E"><div class="sh-ico"><svg class="i"><use href="#i-pencil"/></svg></div><div><p class="sh-step">Paso 2 de 3</p><h2>Observa y responde</h2><p class="sh-lede" id="obsLede">Mira la foto con calma. Marca lo que ves y di qué es.</p></div></header>
+  <div class="ph-obs">
+    <div class="card ph-fig"><figure id="figura"><img id="phImg" alt="Microfotografía para identificar" decoding="async"><figcaption id="phCap"></figcaption></figure><div class="actions" style="margin-top:8px"><button class="btn btn-ghost btn-sm" id="btnZoom" type="button"><svg class="i"><use href="#i-eye"/></svg>Ampliar</button></div></div>
+    <div class="card">
+      <h3 id="tPregunta">¿Qué estructura ves?</h3>
+      <div class="ph-ops" id="ops" role="group" aria-label="Opciones"></div>
+      <div class="field" style="margin-top:12px"><label for="resp">Tu respuesta</label><input type="text" id="resp" autocomplete="off" placeholder="Elige una opción o escríbela"></div>
+      <h3 style="margin-top:16px">¿Qué rasgos observas? <span class="help" style="font-weight:400">(opcional)</span></h3>
+      <div class="ph-obsl" id="obsl"></div>
+      <div class="field" style="margin-top:12px"><label for="desc">Descríbelo con tus palabras <span class="help" style="font-weight:400">(opcional)</span></label><textarea id="desc" rows="3" placeholder="Paredes, forma de las células, color, dónde está…"></textarea></div>
+      <div class="actions"><button class="btn btn-primary btn-big" id="btnComprobar" type="button"><svg class="i"><use href="#i-check"/></svg>Comprobar</button></div>
+      <p class="help" id="estado"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · RESULTADO -->
+<section class="screen" data-step="3">
+  <header class="sh" style="--c:#0E8C7A"><div class="sh-ico"><svg class="i"><use href="#i-check"/></svg></div><div><p class="sh-step">Paso 3 de 3</p><h2>Resultado</h2><p class="sh-lede">El veredicto lo calcula el código con la etiqueta de la foto. La IA solo da una segunda opinión y se contrasta.</p></div></header>
+  <div id="resultado" aria-live="polite"></div>
+  <div class="card" id="cardIA"><h3>Segunda opinión de la IA</h3><div id="iaBloque"></div></div>
+  <div class="actions" style="margin-bottom:18px"><button class="btn btn-primary" id="btnOtra" type="button"><svg class="i"><use href="#i-refresh"/></svg>Otra foto al azar</button><button class="btn btn-ghost" id="btnVerProg" type="button"><svg class="i"><use href="#i-target"/></svg>Ver mi progreso</button></div>
+</section>
+
+<!-- 4 · PROFESORADO (fuera del recorrido) -->
+<section class="screen" data-step="4">
+  <header class="sh" style="--c:#1F6FB2"><div class="sh-ico"><svg class="i"><use href="#i-user"/></svg></div><div><p class="sh-step">Profesorado</p><h2>Banco de fotos propio</h2><p class="sh-lede">Añade tus fotos con un fichero JSON, corrige etiquetas del banco base o busca imágenes libres en Commons.</p></div></header>
+  <div class="card"><h3>Estado del banco</h3><div id="profEstado"></div>
+    <div class="actions"><button class="btn btn-primary btn-sm" id="btnAbreJson" type="button"><svg class="i"><use href="#i-upload"/></svg>Abrir mi JSON</button><button class="btn btn-ghost btn-sm" id="btnPlantilla" type="button"><svg class="i"><use href="#i-download"/></svg>Descargar plantilla</button><button class="btn btn-ghost btn-sm" id="btnQuitaJson" type="button">Quitar el JSON abierto</button><input type="file" id="fileJson" accept="application/json,.json" hidden></div>
+    <div id="profMsgs"></div></div>
+  <div class="card"><h3>Cómo se publica en el repositorio</h3>
+    <ol class="ph-ol"><li>Crea en el repositorio de la app un fichero llamado <code>banco-profesor.json</code> con el formato de la plantilla (a la misma altura que <code>index.html</code>).</li><li>Sube tus fotos a una carpeta, por ejemplo <code>fotos/</code>, y pon su ruta relativa en <code>url</code> (<code>fotos/xilema-01.jpg</code>). También puedes usar fotos de Commons con <code>commons</code>.</li><li>Al abrir la app desde GitHub Pages, el fichero se lee solo y tus fotos aparecen como «Mi profesorado». No hay que tocar el código.</li></ol>
+    <p class="help">Cada foto necesita <code>modo</code> y <code>etiqueta</code> de la lista cerrada. Pon siempre <code>autoria</code> y <code>licencia</code> de tus fotos: se muestran al alumnado. Solo se aceptan rutas del repositorio, direcciones de <code>upload.wikimedia.org</code> y nombres de Commons.</p>
+    <pre class="fa-pre" id="profEjemplo"></pre></div>
+  <div class="card"><h3>Buscar fotos libres en Commons</h3>
+    <div class="ph-busca"><div class="field"><label for="qBusca">Qué buscar</label><input type="text" id="qBusca" placeholder="p. ej. xylem cross section"></div><div class="field"><label for="selBModo">Para</label><select id="selBModo"><option value="anatomia">Anatomía</option><option value="deficiencia">Deficiencia foliar</option></select></div><button class="btn btn-ghost" id="btnBusca" type="button">Buscar</button></div>
+    <p class="help" id="busEstado">Mira cada foto antes de etiquetarla: las etiquetas que pongas aquí son tu criterio, no el de la app.</p>
+    <div class="ph-gal ph-gal-s" id="busRes"></div>
+    <h3 style="margin-top:16px">Borrador</h3><div id="borrador"></div>
+    <div class="actions"><button class="btn btn-primary btn-sm" id="btnJsonBorrador" type="button"><svg class="i"><use href="#i-download"/></svg>Descargar JSON con el borrador y mis ajustes</button></div></div>
+  <div class="card"><h3>Revisar el banco base</h3><p class="help">Las etiquetas del banco base salen del título del fichero en Commons, no de una revisión foto a foto. Corrígelas u ocúltalas aquí; se guardan en este navegador y se exportan en el JSON (<code>corrige</code> y <code>ocultar</code>) para que valgan para todo el alumnado.</p><div id="revision" class="tbl-wrap"></div></div>
+  <div class="card"><h3>Créditos</h3><p class="help">Autoría y licencia de todas las fotos del banco, leídas de Commons en este momento.</p><div class="actions"><button class="btn btn-ghost btn-sm" id="btnCreditos" type="button"><svg class="i"><use href="#i-download"/></svg>Descargar créditos (CSV)</button></div><p class="help" id="credEstado"></p></div>
+</section>
+
+<!-- 5 · PROGRESO (fuera del recorrido) -->
+<section class="screen" data-step="5">
+  <header class="sh" style="--c:#0E8C7A"><div class="sh-ico"><svg class="i"><use href="#i-target"/></svg></div><div><p class="sh-step">Mi progreso</p><h2>Cómo vas</h2><p class="sh-lede">Se calcula con tus respuestas a las fotos del banco. Las fotos propias y el ejemplo no cuentan.</p></div></header>
+  <div class="card" id="progResumen"></div>
+  <div class="card"><h3>Por estructura</h3><div id="progBarras"></div></div>
+  <div class="card"><h3>Últimas respuestas</h3><div id="progHist" class="tbl-wrap"></div>
+    <div class="field" style="margin-top:12px;max-width:340px"><label for="inNombre">Tu nombre (solo para el informe, no sale del navegador)</label><input type="text" id="inNombre" autocomplete="off"></div>
+    <div class="actions"><button class="btn btn-word btn-sm" id="btnProgWord" type="button"><svg class="i"><use href="#i-doc"/></svg>Informe en Word</button><button class="btn btn-ghost btn-sm" id="btnProgCsv" type="button">CSV</button><button class="btn btn-ghost btn-sm" id="btnProgBorra" type="button"><svg class="i"><use href="#i-trash"/></svg>Borrar mi progreso</button></div></div>
+</section>
+</main>
+
+<footer class="fa-foot"><hr><p><b>PhytoDiagnostix</b> · Fernando Borrás Rocher · Universidad Miguel Hernández de Elche. Herramienta de apoyo: la IA puede equivocarse y la decisión final es tuya. Tus datos se guardan solo en este navegador.</p></footer>
+<div class="bottomnav"><div class="bn-in"><button class="btn btn-ghost" id="navBack" type="button"><svg class="i"><use href="#i-left"/></svg>Atrás</button><div class="bn-hint" id="navHint"></div><button class="btn btn-primary" id="navNext" type="button"><span id="navNextTxt">Siguiente</span><svg class="i"><use href="#i-right"/></svg></button></div></div>
+
+<div class="modal" id="mIA" role="dialog" aria-modal="true" aria-labelledby="mIAT"><div class="modal-box"><div class="modal-head"><h2 id="mIAT">Inteligencia artificial</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body">
+  <div class="field"><label for="selProv">Proveedor</label><select id="selProv"><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="anthropic">Anthropic Claude</option></select></div>
+  <div class="field"><label for="apiKey">Tu clave de API</label><div class="keyrow"><input type="password" id="apiKey" autocomplete="off"><button class="eye" id="btnEye" type="button" aria-label="Ver"><svg class="i"><use href="#i-eye"/></svg></button></div></div>
+  <div class="field"><label for="modelo">Modelo</label><input type="text" id="modelo" list="modelos"><datalist id="modelos"></datalist></div>
+  <div class="actions"><button class="btn btn-ghost btn-sm" id="btnModelos" type="button">Ver los modelos de mi clave</button></div>
+  <p class="help" id="iaEstado">La clave se guarda solo en este navegador y se envía únicamente a tu proveedor. Cada persona usa la suya y paga su propio uso. Elige un modelo económico: este uso no necesita el más potente.</p></div></div></div>
+<div class="modal" id="mEnvio" role="dialog" aria-modal="true" aria-labelledby="mEnT"><div class="modal-box"><div class="modal-head"><h2 id="mEnT">Esto es lo que saldría hacia tu proveedor de IA</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><div id="envioInfo"></div><img id="envioImg" class="ph-envio" alt="Imagen que se enviaría" hidden><pre class="fa-pre" id="envioTxt"></pre><label class="fa-chk" style="margin:12px 0"><input type="checkbox" id="envioOk"> He revisado la muestra y confirmo que puede salir de mi ordenador.</label><div class="actions"><button class="btn btn-primary" id="envioSi" type="button" disabled>Enviar y analizar</button><button class="btn btn-ghost" id="envioNo" type="button">Cancelar</button></div></div></div></div>
+<div class="modal" id="mHelp" role="dialog" aria-modal="true" aria-labelledby="mHelpT"><div class="modal-box"><div class="modal-head"><h2 id="mHelpT">Ayuda</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><div class="glos" id="glos"></div></div></div></div>
+<div class="modal" id="mZoom" role="dialog" aria-modal="true" aria-label="Foto ampliada"><div class="modal-box ph-zoom"><div class="modal-head"><h2>Foto ampliada</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><img id="zoomImg" alt="Microfotografía ampliada"></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>const APP="phytodiagnostix";const APP_NAME="PhytoDiagnostix";const LOGO_ICON="leaf";
+"use strict";
+/* ── utilidades comunes (todas las apps Forja) ──────────────────────────────
+   Requiere que la app defina antes:  const APP = 'miapp';  (prefijo de almacenamiento)  */
+const $ = id => document.getElementById(id), $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ico = n => `<svg class="i"><use href="#i-${n}"/></svg>`;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const uid = (p = '') => p + Math.random().toString(36).slice(2, 8);
+const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+const wc = s => (String(s || '').trim().match(/[\p{L}\p{N}]+/gu) || []).length;
+const chunk = (a, n) => { const o = []; for (let i = 0; i < a.length; i += n) o.push(a.slice(i, i + n)); return o; };
+const nf = n => Math.round(n).toLocaleString('es-ES');
+const mmss = s => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+const slug = s => norm(s).replace(/ /g, '_').slice(0, 40) || 'x';
+function toast(m, ms = 4200) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), ms); }
+function dl(nombre, contenido, tipo) { const b = contenido instanceof Blob ? contenido : new Blob([contenido], {type: tipo}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2500); }
+
+/* librerías externas: solo desde cdnjs (la CSP no admite otros orígenes) */
+const LIB = {
+  mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+  jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdfw: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  docx: 'https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js'
+};
+function cargaLib(urls) {
+  return urls.reduce((p, u) => p.catch(() => new Promise((ok, ko) => { const s = document.createElement('script'); s.src = u; s.onload = ok; s.onerror = () => { s.remove(); ko(); }; document.head.appendChild(s); })), Promise.reject())
+    .catch(() => { throw new Error('No se pudo cargar una librería: ¿hay conexión?'); });
+}
+
+/* huella SHA-256 (con alternativa para file:// sin contexto seguro) y canonización estable */
+const canon = v => v === null || typeof v !== 'object' ? JSON.stringify(v) : Array.isArray(v) ? '[' + v.map(canon).join(',') + ']' : '{' + Object.keys(v).filter(k => v[k] !== undefined).sort().map(k => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
+function sha256js(bytes) {
+  const pr = []; for (let n = 2; pr.length < 64; n++) if (pr.every(p => n % p)) pr.push(n);
+  const fr = x => Math.floor((x - Math.floor(x)) * 4294967296), K = pr.map(p => fr(Math.cbrt(p))), H = pr.slice(0, 8).map(p => fr(Math.sqrt(p)));
+  const l = bytes.length, pad = new Uint8Array(((l + 9 + 63) >> 6) << 6); pad.set(bytes); pad[l] = 0x80;
+  const dv = new DataView(pad.buffer); dv.setUint32(pad.length - 8, Math.floor(l * 8 / 4294967296)); dv.setUint32(pad.length - 4, (l * 8) >>> 0);
+  const rr = (x, n) => (x >>> n) | (x << (32 - n)), W = new Uint32Array(64);
+  for (let i = 0; i < pad.length; i += 64) {
+    for (let t = 0; t < 16; t++) W[t] = dv.getUint32(i + t * 4);
+    for (let t = 16; t < 64; t++) { const s0 = rr(W[t - 15], 7) ^ rr(W[t - 15], 18) ^ (W[t - 15] >>> 3), s1 = rr(W[t - 2], 17) ^ rr(W[t - 2], 19) ^ (W[t - 2] >>> 10); W[t] = (W[t - 16] + s0 + W[t - 7] + s1) >>> 0; }
+    let [a, b, c, d, e, f, g, hh] = H;
+    for (let t = 0; t < 64; t++) { const S1 = rr(e, 6) ^ rr(e, 11) ^ rr(e, 25), ch = (e & f) ^ (~e & g), t1 = (hh + S1 + ch + K[t] + W[t]) >>> 0, S0 = rr(a, 2) ^ rr(a, 13) ^ rr(a, 22), mj = (a & b) ^ (a & c) ^ (b & c), t2 = (S0 + mj) >>> 0; hh = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = b; b = a; a = (t1 + t2) >>> 0; }
+    [a, b, c, d, e, f, g, hh].forEach((v, j) => H[j] = (H[j] + v) >>> 0);
+  }
+  return H.map(v => v.toString(16).padStart(8, '0')).join('');
+}
+async function sha256(str) {
+  const b = new TextEncoder().encode(str);
+  if (window.crypto?.subtle) { try { return [...new Uint8Array(await crypto.subtle.digest('SHA-256', b))].map(x => x.toString(16).padStart(2, '0')).join(''); } catch {} }
+  return sha256js(b);
+}
+
+/* ── persistencia local (IndexedDB). La app define:  let S = {...};  y opcionalmente  const KEYP = () => 'main';  ── */
+const dbP = new Promise((ok, ko) => { const r = indexedDB.open(APP, 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); });
+const kv = async (mode, fn) => { const d = await dbP; return new Promise((ok, ko) => { const tx = d.transaction('kv', mode), q = fn(tx.objectStore('kv')); tx.oncomplete = () => ok(q && q.result); tx.onerror = () => ko(tx.error); }); };
+const _key = () => (typeof KEYP === 'function' ? KEYP() : 'main');
+let _g;
+function guarda() { clearTimeout(_g); _g = setTimeout(() => kv('readwrite', s => s.put(S, _key())).catch(() => toast('No se pudo guardar en el navegador (¿demasiado material?)')), 500); }
+/* guardado inmediato: úsalo justo después de pagar una llamada a la IA, para no perder el resultado si se cierra la pestaña */
+const guardaYa = () => { clearTimeout(_g); return kv('readwrite', s => s.put(S, _key())).catch(() => toast('No se pudo guardar en el navegador')); };
+window.addEventListener('pagehide', () => { clearTimeout(_g); try { kv('readwrite', s => s.put(S, _key())); } catch {} });
+async function cargaEstado(key = _key()) { try { const p = await kv('readonly', s => s.get(key)); return p || null; } catch { return null; } }
+
+/* ── proveedores de IA con la clave de cada persona: OpenAI, Google Gemini, Anthropic Claude ──────────────
+   Mensajes: [{role:'system'|'user'|'assistant', content: string | [{t:'text',v}, {t:'img',mime,data:'data:...'}]}]
+   Uso:   const texto = await llm(msgs, {max: 2800});      const obj = await llmJSON(msgs, {max: 3500});
+   Las claves viven solo en localStorage de este navegador. La clave de OpenAI es compartida por todo el catálogo ('ia_openai_key'). */
+const PROV = {
+  openai: {n: 'OpenAI', m: 'gpt-6-luna', k: 'ia_openai_key'},
+  gemini: {n: 'Google Gemini', m: 'gemini-2.5-flash', k: APP + '_key_gemini'},
+  anthropic: {n: 'Anthropic Claude', m: 'claude-haiku-4-5-20251001', k: APP + '_key_anthropic'}
+};
+const getProv = () => PROV[localStorage.getItem(APP + '_prov')] ? localStorage.getItem(APP + '_prov') : 'openai';
+const getKey = (p = getProv()) => localStorage.getItem(PROV[p].k) || '';
+const getMod = (p = getProv()) => localStorage.getItem(APP + '_model_' + p) || PROV[p].m;
+const parseJ = tx => { tx = String(tx || '').trim().replace(/^```(?:json)?|```$/g, '').trim(); try { return JSON.parse(tx); } catch { const m = tx.match(/\{[\s\S]*\}/); if (m) try { return JSON.parse(m[0]); } catch {} } return null; };
+const partes = c => typeof c === 'string' ? [{t: 'text', v: c}] : c;
+function agrupa(msgs, rolA) { const o = []; for (const m of msgs.filter(m => m.role !== 'system')) { const r = m.role === 'assistant' ? rolA : 'user'; if (o.length && o.at(-1).role === r) o.at(-1).parts.push({t: 'text', v: '\n\n'}, ...partes(m.content)); else o.push({role: r, parts: [...partes(m.content)]}); } if (o.length && o[0].role !== 'user') o.unshift({role: 'user', parts: [{t: 'text', v: '.'}]}); return o; }
+const sysDe = msgs => msgs.filter(m => m.role === 'system').map(m => typeof m.content === 'string' ? m.content : m.content.map(p => p.v || '').join('')).join('\n\n');
+function httpErr(st, tx, pv, mod) {
+  if (st === 401 || st === 403 || (pv === 'gemini' && st === 400 && /API key|API_KEY/i.test(tx))) return new Error(`${PROV[pv].n} no reconoce tu clave. Revísala en el botón «IA».`);
+  if (st === 404 || /model_not_found|not found|does not exist/i.test(tx)) return new Error(`Tu clave no tiene acceso al modelo «${mod}». Elige otro en el botón «IA».`);
+  if (st === 429 && /quota|billing|credit|RESOURCE_EXHAUSTED/i.test(tx)) return new Error(`Tu cuenta de ${PROV[pv].n} no tiene saldo o ha alcanzado su límite.`);
+  if (st === 400 && /image|vision|multimodal|modalit/i.test(tx)) return new Error(`El modelo «${mod}» no admite imágenes. Elige uno con visión.`);
+  return new Error(`${PROV[pv].n} ${st}: ${String(tx).slice(0, 180)}`);
+}
+async function conReintentos(fn, pv) {
+  for (let k = 0; k < 5; k++) {
+    let r; try { r = await fn(); } catch { if (k >= 2) throw new Error(`No hay conexión con ${PROV[pv].n}.`); await sleep(1500); continue; }
+    if (r.ok) return r;
+    if (r.status === 429 || r.status >= 500) { const tx = await r.clone().text(); if (r.status === 429 && /quota|billing|credit/i.test(tx)) return r; await sleep(2 ** (k + 1) * 1000); continue; }
+    return r;
+  }
+  throw new Error(`${PROV[pv].n} no responde ahora mismo. Inténtalo de nuevo en un momento.`);
+}
+async function llm(msgs, {json = false, max = 2800} = {}) {
+  const pv = getProv(), key = getKey(pv), mod = getMod(pv);
+  if (!key) throw new Error('Falta tu clave de IA. Pulsa el botón «IA», arriba.');
+  if (pv === 'openai') {
+    /* los modelos nuevos rechazan max_tokens/temperature: se prueban variantes según el error */
+    const razona = /^(gpt-[56]|o\d)/.test(mod), o = {json, reasoning: razona, comp: razona, temp: !razona};
+    const mm = msgs.map(m => ({role: m.role, content: typeof m.content === 'string' ? m.content : m.content.map(p => p.t === 'text' ? {type: 'text', text: p.v} : {type: 'image_url', image_url: {url: p.data}})}));
+    for (let k = 0; k < 6; k++) {
+      const body = {model: mod, messages: mm};
+      if (o.json) body.response_format = {type: 'json_object'};
+      if (o.comp) body.max_completion_tokens = max * (o.reasoning ? 2 : 1); else body.max_tokens = max;
+      if (o.reasoning) body.reasoning_effort = 'low';
+      if (o.temp) body.temperature = 0.4;
+      const r = await conReintentos(() => fetch('https://api.openai.com/v1/chat/completions', {method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + key}, body: JSON.stringify(body)}), pv);
+      if (r.ok) return (await r.json()).choices?.[0]?.message?.content || '';
+      const tx = await r.text();
+      if (r.status === 400) {
+        if (/reasoning_effort/i.test(tx) && o.reasoning) { o.reasoning = false; continue; }
+        if (/max_completion_tokens/i.test(tx) && o.comp) { o.comp = false; continue; }
+        if (/max_tokens/i.test(tx) && !o.comp) { o.comp = true; continue; }
+        if (/temperature/i.test(tx) && o.temp) { o.temp = false; continue; }
+        if (/response_format|json/i.test(tx) && o.json) { o.json = false; const u = mm.at(-1); if (typeof u.content === 'string') u.content += '\nResponde SOLO con JSON válido.'; else u.content.push({type: 'text', text: 'Responde SOLO con JSON válido.'}); continue; }
+      }
+      throw httpErr(r.status, tx, pv, mod);
+    }
+    throw new Error('OpenAI no responde ahora mismo.');
+  }
+  if (pv === 'gemini') {
+    const sys = sysDe(msgs), cont = agrupa(msgs, 'model').map(m => ({role: m.role, parts: m.parts.map(p => p.t === 'text' ? {text: p.v} : {inline_data: {mime_type: p.mime, data: p.data.split(',')[1]}})}));
+    const body = {contents: cont, generationConfig: {maxOutputTokens: max, temperature: 0.4}};
+    if (sys) body.systemInstruction = {parts: [{text: sys}]};
+    if (json) body.generationConfig.responseMimeType = 'application/json';
+    const r = await conReintentos(() => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(mod)}:generateContent`, {method: 'POST', headers: {'Content-Type': 'application/json', 'x-goog-api-key': key}, body: JSON.stringify(body)}), pv);
+    const tx = await r.text(); if (!r.ok) throw httpErr(r.status, tx, pv, mod);
+    const j = JSON.parse(tx), txt = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('');
+    if (!txt && j.promptFeedback?.blockReason) throw new Error(`El proveedor ha bloqueado la respuesta (${j.promptFeedback.blockReason}).`);
+    return txt;
+  }
+  const sys = sysDe(msgs), mm = agrupa(msgs, 'assistant').map(m => ({role: m.role, content: m.parts.map(p => p.t === 'text' ? {type: 'text', text: p.v} : {type: 'image', source: {type: 'base64', media_type: p.mime, data: p.data.split(',')[1]}})}));
+  if (json) mm.at(-1).content.push({type: 'text', text: '\n\nResponde SOLO con un objeto JSON válido, sin texto alrededor.'});
+  const r = await conReintentos(() => fetch('https://api.anthropic.com/v1/messages', {method: 'POST', headers: {'Content-Type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'}, body: JSON.stringify({model: mod, max_tokens: max, system: sys, messages: mm})}), pv);
+  const tx = await r.text(); if (!r.ok) throw httpErr(r.status, tx, pv, mod);
+  return (JSON.parse(tx).content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+}
+async function llmJSON(msgs, o = {}) { for (let k = 0; k < 2; k++) { const j = parseJ(await llm(msgs, {...o, json: true})); if (j && typeof j === 'object') return j; } throw new Error('La IA no devolvió una respuesta con el formato esperado. Inténtalo de nuevo.'); }
+async function listaModelos(pv = getProv()) {
+  const key = getKey(pv); if (!key) throw new Error('Primero pega tu clave.'); let r;
+  try {
+    if (pv === 'openai') r = await fetch('https://api.openai.com/v1/models', {headers: {Authorization: 'Bearer ' + key}});
+    else if (pv === 'gemini') r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=100', {headers: {'x-goog-api-key': key}});
+    else r = await fetch('https://api.anthropic.com/v1/models?limit=100', {headers: {'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'}});
+  } catch { throw new Error(`No hay conexión con ${PROV[pv].n}.`); }
+  const tx = await r.text(); if (!r.ok) throw httpErr(r.status, tx, pv, ''); const j = JSON.parse(tx);
+  if (pv === 'openai') return (j.data || []).map(m => m.id).filter(id => /^(gpt-|o\d|chatgpt-)/.test(id) && !/(audio|realtime|transcribe|tts|image|embedding|moderation|search|instruct|whisper|dall|davinci|babbage|codex|computer-use)/i.test(id)).sort();
+  if (pv === 'gemini') return (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent')).map(m => m.name.replace(/^models\//, '')).sort();
+  return (j.data || []).map(m => m.id).sort();
+}
+
+/* ── verificación por código de lo que dice la IA, anonimización y Markdown seguro ──────────────────────────
+   Principio: la IA propone, el código comprueba. Nunca muestres como hecho una cita, una cifra o un recuento
+   que la IA afirme sin haberlo contrastado con el texto de origen. */
+
+/* texto normalizado con mapa a las posiciones originales */
+function normMap(s) {
+  let n = ''; const map = []; let sp = true;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (/[\p{L}\p{N}]/u.test(c)) { for (const ch of c) { n += ch; map.push(i); } sp = false; }
+    else if (!sp) { n += ' '; map.push(i); sp = true; }
+  }
+  return {n, map};
+}
+let _nm = null;
+const nmat = mat => { if (!_nm || _nm.src !== mat) _nm = {src: mat, ...normMap(mat)}; return _nm; };
+/* ¿aparece la cita (literal, ignorando mayúsculas, tildes y puntuación) en el material? */
+function localiza(mat, cita, minLen = 12) { const q = norm(cita); if (q.length < minLen) return null; const m = nmat(mat), i = m.n.indexOf(q); return i < 0 ? null : [m.map[i], m.map[Math.min(i + q.length - 1, m.map.length - 1)]]; }
+const esFiel = (mat, cita) => !!localiza(mat, cita);
+/* extractos del material alrededor de las citas (para dar contexto sin enviar todo) */
+function ventanas(mat, citas, rad = 700, tope = 4200) {
+  const r = citas.map(c => localiza(mat, c)).filter(Boolean).map(([a, b]) => [Math.max(0, a - rad), Math.min(mat.length, b + rad)]).sort((x, y) => x[0] - y[0]), m = [];
+  for (const v of r) { const l = m.at(-1); if (l && v[0] <= l[1]) l[1] = Math.max(l[1], v[1]); else m.push([...v]); }
+  const t = m.map(([a, b]) => mat.slice(a, b).trim()).join('\n[…]\n'); return t.length > tope ? t.slice(0, tope) : t;
+}
+/* cifras que la IA menciona y no están en el material (ignora números pequeños) */
+const numsDe = t => new Set((String(t).match(/\d+(?:[.,]\d+)?/g) || []).map(x => x.replace(',', '.')));
+function numerosNuevos(texto, mat) { const m = numsDe(mat); return [...numsDe(texto)].filter(x => !m.has(x) && parseFloat(x) > 12); }
+
+/* datos personales: se enmascaran antes de enviar nada a un proveedor externo */
+const PII = [['CORREO', /[\w.+-]+@[\w-]+\.[\w.-]+/g], ['ID', /\b\d{8}[A-HJ-NP-TV-Z]\b|\b[XYZ]\d{7}[A-Z]\b/gi], ['TELÉFONO', /(?:\+\d{2}\s?)?\b[6-9]\d{2}[\s.-]?\d{3}[\s.-]?\d{3}\b/g]];
+function scrub(txt, nombre = '') {
+  let n = 0, t = String(txt ?? ''); PII.forEach(([tag, rx]) => { t = t.replace(rx, () => { n++; return `[${tag}]`; }); });
+  const nm = new Set(norm(nombre).split(' ').filter(w => w.length >= 3));
+  t = t.replace(/[\p{L}][\p{L}'’-]*/gu, w => nm.has(norm(w)) ? (n++, '[PERSONA]') : w);
+  return {t, n};
+}
+const cuentaPII = txt => PII.reduce((n, [, rx]) => n + ((String(txt).match(rx) || []).length), 0);
+
+/* Markdown mínimo y seguro (escapa antes de formatear) */
+function md(s) {
+  const inl = x => esc(x).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<i>$2</i>').replace(/`([^`]+)`/g, '<code>$1</code>');
+  const out = []; let lst = null; const cierra = () => { if (lst) { out.push(`</${lst}>`); lst = null; } };
+  for (const raw of String(s || '').split('\n')) {
+    const l = raw.trimEnd(); let m; if (!l.trim()) { cierra(); continue; }
+    if (m = l.match(/^#{1,4}\s+(.*)/)) { cierra(); out.push(`<h4>${inl(m[1])}</h4>`); continue; }
+    if (m = l.match(/^\s*[-*•]\s+(.*)/)) { if (lst !== 'ul') { cierra(); out.push('<ul>'); lst = 'ul'; } out.push(`<li>${inl(m[1])}</li>`); continue; }
+    if (m = l.match(/^\s*\d+[.)]\s+(.*)/)) { if (lst !== 'ol') { cierra(); out.push('<ol>'); lst = 'ol'; } out.push(`<li>${inl(m[1])}</li>`); continue; }
+    cierra(); out.push(`<p>${inl(l)}</p>`);
+  }
+  cierra(); return out.join('');
+}
+
+/* ── navegación Forja: barra superior, stepper, barra inferior, ventanas, ayuda y ajustes de IA ─────────────
+   La app define (en app.js; se leen al ejecutar, no al cargar el módulo) y llama a iniciaUI() al arrancar:
+     const STEPS  = ['Inicio', 'Paso 1', ...];                   // etiquetas del stepper (la actual se muestra con nombre)
+     const NAV    = [['Empezar',''], ['Siguiente: …','pista'], …]; // [texto del botón «siguiente», pista de la barra inferior] por pantalla
+     const RENDER = {0: pintaInicio, 1: pintaX, …};               // funciones que pintan cada pantalla al entrar
+     const GLOS   = [['Título','Texto'], …];                       // ayuda
+   Opcionales:  const CAN_NEXT = i => true|'mensaje';  // validación antes de avanzar
+                const HUBS = ['Glosario', 'Progreso'];  // secciones fuera del recorrido lineal: pantallas con data-step = STEPS.length + k.
+                // Al entrar en una sección el stepper muestra solo su nombre, la barra de progreso se vacía y «Atrás»/«Siguiente» vuelven al inicio. */
+let step = 0;
+const esHub = i => i >= STEPS.length;
+function buildStepper() {
+  if (esHub(step)) {
+    const nombre = (typeof HUBS !== 'undefined' && HUBS[step - STEPS.length]) || '';
+    $('stepper').innerHTML = `<button class="sdot" type="button" data-go="0" data-state="done"><span class="n">${ico('left')}</span><span class="lbl">Inicio</span></button><span class="sline on"></span><button class="sdot" type="button" data-state="now" aria-current="page"><span class="n">${ico(typeof LOGO_ICON === 'string' ? LOGO_ICON : 'bulb')}</span><span class="lbl">${esc(nombre)}</span></button>`;
+    $$('#stepper [data-go]').forEach(b => b.onclick = () => go(+b.dataset.go)); return;
+  }
+  $('stepper').innerHTML = STEPS.map((s, i) => `${i ? `<span class="sline${i <= step ? ' on' : ''}"></span>` : ''}<button class="sdot" type="button" data-go="${i}" data-state="${i < step ? 'done' : i === step ? 'now' : ''}" ${i === step ? 'aria-current="step"' : ''}><span class="n">${i < step ? ico('check') : i === 0 ? ico(typeof LOGO_ICON === 'string' ? LOGO_ICON : 'bulb') : i}</span><span class="lbl">${esc(s)}</span></button>`).join('');
+  $$('#stepper [data-go]').forEach(b => b.onclick = () => go(+b.dataset.go));
+}
+function updateNav() { const N = NAV[step] || ['Volver al inicio', '']; $('navBack').classList.toggle('hidden', step === 0 || esHub(step)); $('navNextTxt').textContent = N[0]; $('navHint').textContent = N[1] || ''; }
+function go(i) {
+  step = i; $$('.screen').forEach(s => s.classList.toggle('on', +s.dataset.step === i)); $('progBar').style.width = esHub(i) ? '0%' : (i / (STEPS.length - 1) * 100) + '%';
+  (RENDER[i] || (() => {}))(); buildStepper(); updateNav(); window.scrollTo({top: 0, behavior: 'instant'});
+}
+$('goHome').onclick = () => go(0);
+$('navBack').onclick = () => { if (step > 0) go(step - 1); };
+$('navNext').onclick = () => { if (esHub(step)) return go(0); const ok = typeof CAN_NEXT === 'function' ? CAN_NEXT(step) : true; if (ok !== true && ok) return toast(ok); go(step === STEPS.length - 1 ? 0 : step + 1); };
+
+/* ventanas modales (Escape y clic fuera cierran; data-close en el botón) */
+const _cierres = {};   // id de modal → función a ejecutar al cerrar
+$$('.modal').forEach(m => m.addEventListener('click', ev => { if (ev.target === m || ev.target.hasAttribute('data-close')) { m.classList.remove('on'); _cierres[m.id]?.(); } }));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.modal.on').forEach(m => { m.classList.remove('on'); _cierres[m.id]?.(); }); });
+function cargaIA() { const pv = getProv(); $('selProv').value = pv; $('apiKey').value = getKey(pv); $('apiKey').placeholder = KPH[pv]; $('modelo').value = getMod(pv); let ml = []; try { ml = JSON.parse(localStorage.getItem(APP + '_models_' + pv) || '[]'); } catch {} $('modelos').innerHTML = [...new Set([PROV[pv].m, ...ml])].map(m => `<option value="${esc(m)}">`).join(''); }
+const KPH = {openai: 'sk-proj-…', gemini: 'AIza…', anthropic: 'sk-ant-…'};
+/* iniciaUI(): llámala UNA vez desde app.js, al final, justo antes de go(0). Enlaza la ayuda y los ajustes de IA.
+   (No se hace al cargar el módulo porque GLOS y el resto de constantes de la app aún no existen en ese momento.) */
+function iniciaUI() {
+  if ($('btnHelp')) { $('glos').innerHTML = (typeof GLOS !== 'undefined' ? GLOS : []).map(g => `<div><b>${esc(g[0])}</b><span>${esc(g[1])}</span></div>`).join(''); $('btnHelp').onclick = () => $('mHelp').classList.add('on'); }
+  if ($('btnIA')) {
+    $('btnIA').onclick = () => { cargaIA(); $('mIA').classList.add('on'); };
+    $('selProv').onchange = () => { localStorage.setItem(APP + '_prov', $('selProv').value); cargaIA(); };
+    $('apiKey').oninput = () => localStorage.setItem(PROV[getProv()].k, $('apiKey').value.trim());
+    $('modelo').oninput = () => localStorage.setItem(APP + '_model_' + getProv(), $('modelo').value.trim() || PROV[getProv()].m);
+    $('btnEye').onclick = () => { const k = $('apiKey'); k.type = k.type === 'password' ? 'text' : 'password'; };
+    $('btnModelos').onclick = async () => { const st = $('iaEstado'), pv = getProv(); st.textContent = '…'; try { const l = await listaModelos(pv); localStorage.setItem(APP + '_models_' + pv, JSON.stringify(l)); $('modelos').innerHTML = l.map(m => `<option value="${esc(m)}">`).join(''); st.textContent = `${l.length} modelos disponibles en tu clave; escribe o elige uno.`; } catch (e) { st.textContent = e.message; } };
+  }
+}
+/* ¿hay clave? si no, abre los ajustes de IA y avisa */
+function pideClave() { if (getKey()) return true; if ($('mIA')) { cargaIA(); $('mIA').classList.add('on'); } toast('Pega tu clave de IA para continuar'); return false; }
+
+/* ── salidas: Word desde Markdown y ZIP. Se cargan docx y JSZip desde cdnjs solo cuando hacen falta ────────── */
+/* wordDeMarkdown(md, {titulo, subtitulo, pie, kicker}) → Blob .docx
+   Convierte ## encabezados, listas y **negritas**; lo demás va como párrafos. */
+async function wordDeMarkdown(md, {titulo = '', subtitulo = '', pie = '', kicker = ''} = {}) {
+  await cargaLib([LIB.docx]); const X = window.docx;
+  const runs = (tx, base = {}) => String(tx).split(/(\*\*[^*]+\*\*)/).filter(Boolean).map(p => p.startsWith('**') ? new X.TextRun({text: p.slice(2, -2), font: 'Arial', size: 22, bold: true, ...base}) : new X.TextRun({text: p, font: 'Arial', size: 22, ...base}));
+  const P = (tx, o = {}) => new X.Paragraph({heading: o.h, alignment: o.c ? X.AlignmentType.CENTER : undefined, spacing: {after: o.after ?? 110}, indent: o.ind ? {left: o.ind} : undefined, children: o.plain ? [new X.TextRun({text: String(tx), font: 'Arial', size: o.s || 22, bold: o.b, italics: o.i, color: o.col})] : runs(tx, {italics: o.i, color: o.col})});
+  const k = [];
+  if (kicker) k.push(P(kicker.toUpperCase(), {c: true, b: true, col: 'E4572E', s: 20, plain: true}));
+  if (titulo) k.push(P(titulo, {c: true, b: true, s: 32, plain: true}));
+  if (subtitulo) k.push(P(subtitulo, {c: true, col: '5D7691', s: 20, after: 260, plain: true}));
+  for (const l of String(md).split('\n')) {
+    const t = l.trimEnd(); if (!t.trim()) continue; let m;
+    if (m = t.match(/^#{1,4}\s+(.*)/)) k.push(P(m[1].replace(/\*\*/g, ''), {h: X.HeadingLevel.HEADING_1, plain: true}));
+    else if (m = t.match(/^\s*[-*•]\s+(.*)/)) k.push(P('•  ' + m[1], {ind: 360, after: 60}));
+    else if (m = t.match(/^\s*(\d+[.)])\s+(.*)/)) k.push(P(m[1] + '  ' + m[2], {ind: 360, after: 60}));
+    else k.push(P(t));
+  }
+  if (pie) k.push(P(pie, {i: true, s: 16, col: '8899AA', plain: true}));
+  return X.Packer.toBlob(new X.Document({creator: typeof APP_NAME === 'string' ? APP_NAME : APP, sections: [{children: k}]}));
+}
+/* zipDe({'nombre.ext': Blob|string, …}) → Blob .zip */
+async function zipDe(ficheros) { await cargaLib([LIB.jszip]); const z = new JSZip(); for (const [n, c] of Object.entries(ficheros)) z.file(n, c); return z.generateAsync({type: 'blob', compression: 'DEFLATE'}); }
+/* csv con BOM, separador «;» (Excel en español) y comillas escapadas */
+const csvq = v => { const s = String(v ?? ''); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+const csvDe = (cab, filas) => '\ufeff' + [cab, ...filas].map(f => f.map(csvq).join(';')).join('\r\n');
+
+/* ══ DATOS: vocabulario cerrado, fichas de repaso, rasgos observables y banco de fotos ══
+   Todo lo que la IA «ve» se limita a estas listas (patrón 15): lo demás se descarta.
+   Las etiquetas del banco de Commons salen del TÍTULO del fichero y de su categoría en Commons,
+   no de una revisión visual de cada imagen: el profesorado puede corregirlas en la pantalla «Profesorado». ══ */
+const MODOS = {anatomia: 'Anatomía histológica', deficiencia: 'Deficiencia foliar'};
+
+/* clave → [etiqueta visible, términos que el código acepta al escribir]. Los términos de ≤2 letras solo valen si son la respuesta entera. */
+const VOCAB = {
+  anatomia: {
+    epidermis: ['Epidermis', ['epidermis', 'cuticula', 'epidermico', 'epidermica', 'epitelio']],
+    estomas: ['Estomas', ['estoma', 'estomas', 'estomatos', 'celulas oclusivas', 'celulas guarda', 'aparato estomatico', 'estomatico']],
+    parenquima: ['Parénquima', ['parenquima', 'parenquimas', 'parenquimatico', 'clorenquima']],
+    colenquima: ['Colénquima', ['colenquima', 'colenquimatico']],
+    esclerenquima: ['Esclerénquima', ['esclerenquima', 'esclereidas', 'esclereida', 'fibras', 'fibra', 'escleroide', 'escleroides']],
+    xilema: ['Xilema', ['xilema', 'vasos', 'traqueidas', 'traqueida', 'leno', 'madera']],
+    floema: ['Floema', ['floema', 'tubos cribosos', 'tubo criboso', 'celulas cribosas', 'liber']],
+    meristemo: ['Meristemo', ['meristemo', 'meristemos', 'meristematico', 'meristematica', 'meristemo apical', 'apice radicular', 'punta de la raiz']]
+  },
+  deficiencia: {
+    N: ['Nitrógeno (N)', ['nitrogeno', 'n']],
+    P: ['Fósforo (P)', ['fosforo', 'p']],
+    K: ['Potasio (K)', ['potasio', 'k']],
+    Mg: ['Magnesio (Mg)', ['magnesio', 'mg']],
+    Fe: ['Hierro (Fe)', ['hierro', 'fe']],
+    Ca: ['Calcio (Ca)', ['calcio', 'ca']],
+    S: ['Azufre (S)', ['azufre', 's']],
+    Zn: ['Zinc (Zn)', ['zinc', 'cinc', 'zn']],
+    Mn: ['Manganeso (Mn)', ['manganeso', 'mn']],
+    B: ['Boro (B)', ['boro', 'b']]
+  }
+};
+
+/* Fichas de repaso: se muestran sin IA. «rasgos» es el vocabulario controlado con el que la IA puede describir una foto. */
+const FICHAS = {
+  anatomia: {
+    epidermis: {que: 'Capa más externa del cuerpo primario de la planta: células vivas, muy unidas, normalmente sin cloroplastos, recubiertas por la cutícula.',
+      rasgos: ['Una sola capa de células en la superficie', 'Células aplanadas o de contorno sinuoso, sin espacios entre ellas', 'Cutícula visible como línea externa (en cortes)', 'Estomas o tricomas intercalados entre las células'],
+      confunde: {estomas: 'Los estomas forman parte de la epidermis: si lo que destaca es el poro con dos células oclusivas, es un estoma.', parenquima: 'El parénquima está debajo, con células más grandes y espacios entre ellas.'}},
+    estomas: {que: 'Poro rodeado por dos células oclusivas que regulan el intercambio de gases y la pérdida de agua; a veces tienen células anexas alrededor.',
+      rasgos: ['Dos células en forma de riñón o judía enfrentadas', 'Un poro (ostiolo) entre las dos células', 'Cloroplastos visibles en las células oclusivas', 'Células anexas rodeando el aparato estomático'],
+      confunde: {epidermis: 'La epidermis es el conjunto de células de la superficie; el estoma es el poro con sus dos células oclusivas.'}},
+    parenquima: {que: 'Tejido fundamental de células vivas con pared primaria fina; realiza fotosíntesis (clorénquima), reserva y relleno.',
+      rasgos: ['Células grandes de contorno redondeado o poligonal', 'Paredes finas y de grosor uniforme', 'Espacios intercelulares entre las células', 'Cloroplastos o granos de almidón en el citoplasma'],
+      confunde: {colenquima: 'El colénquima engrosa la pared, sobre todo en las esquinas.', esclerenquima: 'El esclerénquima tiene paredes muy gruesas y el lumen casi cerrado.'}},
+    colenquima: {que: 'Tejido de sostén de órganos jóvenes en crecimiento: células vivas con pared primaria engrosada de forma desigual (celulosa y pectinas), sin lignificar.',
+      rasgos: ['Paredes engrosadas, sobre todo en las esquinas de las células', 'Pocos o ningún espacio intercelular', 'Situado justo debajo de la epidermis (tallos, pecíolos)', 'Células vivas con lumen amplio'],
+      confunde: {parenquima: 'El parénquima tiene paredes finas y uniformes.', esclerenquima: 'El esclerénquima tiene paredes secundarias muy gruesas en todo el contorno y lumen casi cerrado.'}},
+    esclerenquima: {que: 'Tejido de sostén con paredes secundarias gruesas, a menudo lignificadas; sus células suelen estar muertas en la madurez. Incluye fibras (alargadas) y esclereidas (isodiamétricas o ramificadas).',
+      rasgos: ['Paredes muy gruesas con lumen estrecho', 'Fibras largas y afiladas o esclereidas de forma irregular', 'Pared fuertemente teñida si el colorante marca lignina', 'Casi ninguna cavidad celular visible'],
+      confunde: {colenquima: 'El colénquima engrosa sobre todo las esquinas y sus células están vivas.', xilema: 'El xilema forma conductos de lumen amplio; las fibras del esclerénquima los acompañan pero no conducen.'}},
+    xilema: {que: 'Tejido conductor de agua y sales minerales: vasos y traqueidas de paredes secundarias lignificadas, células muertas en la madurez.',
+      rasgos: ['Conductos de gran diámetro (vasos) o traqueidas alargadas', 'Paredes lignificadas con anillos, espirales o punteaduras', 'Células sin contenido (lumen vacío)', 'Agrupado en haces vasculares o en anillos de madera'],
+      confunde: {floema: 'El floema tiene paredes finas sin lignificar y células pequeñas acompañantes.', esclerenquima: 'Las fibras del esclerénquima tienen lumen casi cerrado, no forman conductos amplios.'}},
+    floema: {que: 'Tejido conductor de la savia elaborada. En angiospermas: tubos cribosos con placas cribosas y células acompañantes.',
+      rasgos: ['Células de paredes finas, sin lignificar', 'Tubos cribosos con placas cribosas (si el corte las alcanza)', 'Células acompañantes pequeñas y de citoplasma denso junto a los tubos', 'Situado hacia el exterior del xilema dentro del haz'],
+      confunde: {xilema: 'El xilema tiene paredes gruesas lignificadas y conductos más anchos y vacíos.', parenquima: 'El parénquima no forma tubos con placas cribosas ni lleva células acompañantes.'}},
+    meristemo: {que: 'Tejido de células poco diferenciadas que se dividen activamente. En la punta de la raíz, la zona meristemática está justo detrás de la cofia.',
+      rasgos: ['Células pequeñas de contorno cuadrado o rectangular', 'Núcleo grande que ocupa buena parte de la célula', 'Citoplasma denso, vacuolas pequeñas o ausentes', 'Figuras de mitosis (cromosomas condensados)'],
+      confunde: {parenquima: 'El parénquima tiene células grandes, vacuoladas y paredes finas, sin divisiones frecuentes.'}}
+  },
+  deficiencia: {
+    N: {que: 'Nutriente móvil: la planta lo retira de las hojas viejas para las jóvenes.', donde: 'hojas viejas', rasgos: ['Amarilleo uniforme que incluye los nervios', 'Síntomas sobre todo en hojas viejas', 'Crecimiento reducido'],
+      confunde: {S: 'El azufre produce un amarilleo parecido, pero aparece antes en hojas jóvenes.', Mg: 'El magnesio amarillea entre los nervios, que siguen verdes.'}},
+    P: {que: 'Nutriente móvil. El crecimiento es lento y las hojas suelen ser de un verde oscuro.', donde: 'hojas viejas', rasgos: ['Tonos púrpura o rojizos', 'Síntomas sobre todo en hojas viejas', 'Crecimiento lento'],
+      confunde: {N: 'El nitrógeno aclara el verde en vez de oscurecerlo y no suele dar tonos púrpura.'}},
+    K: {que: 'Nutriente móvil. Los síntomas empiezan por el borde de las hojas viejas.', donde: 'hojas viejas', rasgos: ['Borde de la hoja amarillo, seco o quemado', 'Síntomas sobre todo en hojas viejas', 'Manchas necróticas'],
+      confunde: {Mg: 'El magnesio amarillea entre los nervios; el potasio, en el margen.', Ca: 'El calcio afecta a hojas jóvenes y ápices.'}},
+    Mg: {que: 'Nutriente móvil, componente de la clorofila. Amarillea entre los nervios de las hojas viejas.', donde: 'hojas viejas', rasgos: ['Amarilleo entre los nervios, que siguen verdes', 'Síntomas sobre todo en hojas viejas'],
+      confunde: {Fe: 'El hierro da el mismo patrón entre nervios, pero en hojas jóvenes.', K: 'El potasio empieza por el margen de la hoja.'}},
+    Fe: {que: 'Nutriente poco móvil: los síntomas aparecen en hojas jóvenes. Frecuente en suelos calizos o de pH alto.', donde: 'hojas jóvenes', rasgos: ['Amarilleo entre los nervios, que siguen verdes', 'Síntomas sobre todo en hojas jóvenes'],
+      confunde: {Mg: 'El magnesio da el mismo patrón, pero en hojas viejas.', Mn: 'El manganeso también amarillea entre nervios en hojas jóvenes, a veces con pequeñas manchas muertas.'}},
+    Ca: {que: 'Nutriente poco móvil. Afecta a tejidos jóvenes y puntos de crecimiento.', donde: 'hojas jóvenes y ápices', rasgos: ['Hojas jóvenes deformadas o ápice muerto', 'Síntomas sobre todo en hojas jóvenes'],
+      confunde: {B: 'El boro también mata los ápices de crecimiento; las hojas quedan gruesas y quebradizas.'}},
+    S: {que: 'Nutriente poco móvil: el amarilleo general aparece antes en hojas jóvenes.', donde: 'hojas jóvenes', rasgos: ['Amarilleo uniforme que incluye los nervios', 'Síntomas sobre todo en hojas jóvenes'],
+      confunde: {N: 'El nitrógeno empieza por las hojas viejas.'}},
+    Zn: {que: 'Micronutriente poco móvil. Hojas pequeñas y entrenudos cortos.', donde: 'hojas jóvenes', rasgos: ['Hojas pequeñas y entrenudos cortos', 'Amarilleo entre los nervios', 'Síntomas sobre todo en hojas jóvenes'],
+      confunde: {Fe: 'El hierro no acorta los entrenudos de forma típica.'}},
+    Mn: {que: 'Micronutriente poco móvil. Amarilleo entre nervios en hojas jóvenes, a veces con pequeñas manchas necróticas.', donde: 'hojas jóvenes', rasgos: ['Amarilleo entre los nervios, que siguen verdes', 'Síntomas sobre todo en hojas jóvenes', 'Manchas necróticas'],
+      confunde: {Fe: 'El hierro suele dar un amarilleo más intenso y sin manchas muertas.'}},
+    B: {que: 'Micronutriente poco móvil. Afecta a los meristemos: ápices y hojas jóvenes.', donde: 'hojas jóvenes y ápices', rasgos: ['Hojas jóvenes deformadas o ápice muerto', 'Síntomas sobre todo en hojas jóvenes'],
+      confunde: {Ca: 'El calcio también deforma hojas jóvenes; el boro las deja gruesas y quebradizas.'}}
+  }
+};
+
+/* Rasgos que el estudiante puede marcar al observar (aviso formativo, no puntúa). claves = estructuras donde ese rasgo es característico. */
+const OBSERV = [
+  {id: 'a1', modo: 'anatomia', t: 'Dos células en forma de riñón rodeando un poro', claves: ['estomas']},
+  {id: 'a2', modo: 'anatomia', t: 'Paredes celulares muy gruesas, con poco espacio interior', claves: ['esclerenquima', 'xilema']},
+  {id: 'a3', modo: 'anatomia', t: 'Paredes engrosadas sobre todo en las esquinas', claves: ['colenquima']},
+  {id: 'a4', modo: 'anatomia', t: 'Células grandes de paredes finas, con huecos entre ellas', claves: ['parenquima']},
+  {id: 'a5', modo: 'anatomia', t: 'Conductos anchos y vacíos (vasos o traqueidas)', claves: ['xilema']},
+  {id: 'a6', modo: 'anatomia', t: 'Tubos con placas o células pequeñas acompañantes', claves: ['floema']},
+  {id: 'a7', modo: 'anatomia', t: 'Células pequeñas, cuadradas, con núcleo grande', claves: ['meristemo']},
+  {id: 'a8', modo: 'anatomia', t: 'Una capa externa continua de células, a veces con cutícula', claves: ['epidermis', 'estomas']},
+  {id: 'a9', modo: 'anatomia', t: 'Células muy alargadas y afiladas (fibras)', claves: ['esclerenquima']},
+  {id: 'a10', modo: 'anatomia', t: 'Células de forma irregular con pared muy gruesa (esclereidas)', claves: ['esclerenquima']},
+  {id: 'd1', modo: 'deficiencia', t: 'Amarilleo de toda la hoja, también de los nervios', claves: ['N', 'S']},
+  {id: 'd2', modo: 'deficiencia', t: 'Amarilleo entre los nervios, que siguen verdes', claves: ['Mg', 'Fe', 'Mn', 'Zn']},
+  {id: 'd3', modo: 'deficiencia', t: 'Borde de la hoja seco o quemado', claves: ['K']},
+  {id: 'd4', modo: 'deficiencia', t: 'Tonos púrpura o rojizos', claves: ['P']},
+  {id: 'd5', modo: 'deficiencia', t: 'Hojas jóvenes deformadas o ápice muerto', claves: ['Ca', 'B']},
+  {id: 'd6', modo: 'deficiencia', t: 'Los síntomas se ven sobre todo en hojas viejas', claves: ['N', 'P', 'K', 'Mg']},
+  {id: 'd7', modo: 'deficiencia', t: 'Los síntomas se ven sobre todo en hojas jóvenes', claves: ['Fe', 'Ca', 'S', 'Zn', 'Mn', 'B']},
+  {id: 'd8', modo: 'deficiencia', t: 'Hojas pequeñas y entrenudos cortos', claves: ['Zn']}
+];
+
+/* Banco de Wikimedia Commons: [id, nombre de fichero en Commons, modo, etiqueta, (otras respuestas válidas)].
+   Los nombres están copiados de los listados de categoría de Commons (Microscopic images of unidentified plants, Stoma, Nitrogen deficiency…).
+   Autoría y licencia exactas: se leen de la ficha de Commons al mostrar cada foto; aquí no se afirman. */
+const BANCO_COMMONS = [
+  ['c01', 'Stem-Collenchyma40x1.jpg', 'anatomia', 'colenquima'],
+  ['c02', 'Stem-Collenchyma40x2.jpg', 'anatomia', 'colenquima'],
+  ['c03', 'Stem-Collenchyma100x4.jpg', 'anatomia', 'colenquima'],
+  ['c04', 'Stem-Collenchyma100x5.jpg', 'anatomia', 'colenquima'],
+  ['c05', 'Stem-Collenchyma100x6.jpg', 'anatomia', 'colenquima'],
+  ['c06', 'Stem-Collenchyma400x3.jpg', 'anatomia', 'colenquima'],
+  ['c07', 'Transverse section of collenchyma.jpg', 'anatomia', 'colenquima'],
+  ['p01', 'Stem-Parenchyma40x1.jpg', 'anatomia', 'parenquima'],
+  ['p02', 'Stem-Parenchyma100x1.jpg', 'anatomia', 'parenquima'],
+  ['p03', 'Stem-Parenchyma400x1.jpg', 'anatomia', 'parenquima'],
+  ['p04', 'Stem-Parenchyma400x6.jpg', 'anatomia', 'parenquima'],
+  ['p05', 'Stem-Parenchyma400x8.jpg', 'anatomia', 'parenquima'],
+  ['p06', 'Parenchyma.jpg', 'anatomia', 'parenquima'],
+  ['p07', 'Root parenchyma (34877668995).jpg', 'anatomia', 'parenquima'],
+  ['s01', 'Stem-Sclerenchvma100x2.jpg', 'anatomia', 'esclerenquima'],
+  ['s02', 'Plant cell type sclerenchyma fibers.png', 'anatomia', 'esclerenquima'],
+  ['s03', 'Sclerids embedded in upper epidermis of hydrophyte leaf (35268633765).jpg', 'anatomia', 'esclerenquima'],
+  ['s04', 'Sclerids in lower epidermis of hydrophyte leaf (35228410636).jpg', 'anatomia', 'esclerenquima'],
+  ['s05', 'Sclerids in the hydrophyte leaf (35268634785).jpg', 'anatomia', 'esclerenquima'],
+  ['s06', 'Scleroid (35228407326).jpg', 'anatomia', 'esclerenquima'],
+  ['s07', 'Scleroid support in the hydrophyte leaf (35228408416).jpg', 'anatomia', 'esclerenquima'],
+  ['x01', 'Xylem.jpg', 'anatomia', 'xilema'],
+  ['x02', 'Transverse section of xylem.jpg', 'anatomia', 'xilema'],
+  ['x03', 'Xilema em corte longitudinal.jpg', 'anatomia', 'xilema'],
+  ['x04', 'Trachid and vessels within xylem bundle of mesophyte leaf (34605001012).jpg', 'anatomia', 'xilema'],
+  ['x05', 'Plant stem (250 26) Longitudal radial section - woody stem.jpg', 'anatomia', 'xilema'],
+  ['x06', 'Xylem and phloem tissue.jpg', 'anatomia', 'xilema', ['floema']],
+  ['f01', 'Phloem.jpg', 'anatomia', 'floema'],
+  ['f02', 'Transverse section of phloem.jpg', 'anatomia', 'floema'],
+  ['f03', 'Tubos cribosos.jpg', 'anatomia', 'floema'],
+  ['e01', 'Stomata Pengo.jpg', 'anatomia', 'estomas'],
+  ['e02', 'Open and Closed Stomata.jpg', 'anatomia', 'estomas'],
+  ['e03', 'Stomata observed on the rear side of a leaf.jpg', 'anatomia', 'estomas'],
+  ['e04', 'Leaf cells with stomata.jpg', 'anatomia', 'estomas'],
+  ['e05', 'Leaf epithelium, stomata and guard cells.jpg', 'anatomia', 'estomas'],
+  ['e06', 'Leaf epithelium, stomata.jpg', 'anatomia', 'estomas'],
+  ['e07', 'Leaf epithelium, guard cells, stomatal pore and peripheral chloroplasts.jpg', 'anatomia', 'estomas'],
+  ['e08', 'Guards cells in lower epidermis of mesophyte leaf (35103213882).jpg', 'anatomia', 'estomas'],
+  ['e09', 'Stomata in lower epidermis of mesophyte leaf (34634953011).jpg', 'anatomia', 'estomas'],
+  ['e10', 'Stomata and guard cells in upper epidermis of succulent (34810756046).jpg', 'anatomia', 'estomas'],
+  ['e11', 'Stoma and guard cells in succulent xerophyte leaf (34883081660).jpg', 'anatomia', 'estomas'],
+  ['e12', 'Guard cells and stomata in succulent xerophyte leaf (35229487806).jpg', 'anatomia', 'estomas'],
+  ['e13', 'Nail polish impression of stomata.jpg', 'anatomia', 'estomas'],
+  ['d01', 'Leaf Epidermis.jpg', 'anatomia', 'epidermis', ['estomas']],
+  ['d02', 'Leaf epidermis 2.jpg', 'anatomia', 'epidermis', ['estomas']],
+  ['d03', 'Equine sorrel lower epidermis.jpg', 'anatomia', 'epidermis', ['estomas']],
+  ['d04', 'Cuticle overlying upper epidermis in mesophyte leaf (35103215772).jpg', 'anatomia', 'epidermis'],
+  ['d05', 'Cuticle overlying upper epidermis of mesophyte leaf (34686901852).jpg', 'anatomia', 'epidermis'],
+  ['d06', 'Cuticle of leaf under microscope.JPG', 'anatomia', 'epidermis'],
+  ['m01', 'Rootmeristem40x1.jpg', 'anatomia', 'meristemo'],
+  ['m02', 'Rootmeristem40x2.jpg', 'anatomia', 'meristemo'],
+  ['m03', 'Rootmeristem100x1.jpg', 'anatomia', 'meristemo'],
+  ['m04', 'Rootmeristem100x2.jpg', 'anatomia', 'meristemo'],
+  ['m05', 'Rootmeristem400x1.jpg', 'anatomia', 'meristemo'],
+  ['m06', 'Rootmeristem400x3.jpg', 'anatomia', 'meristemo'],
+  ['m07', 'Rootmeristem400x4.jpg', 'anatomia', 'meristemo'],
+  ['m08', 'Root Apical Meristem cell.jpg', 'anatomia', 'meristemo'],
+  ['n01', 'Brassica oleracea Cauliflower Bloemkool stikstofgebrek.jpg', 'deficiencia', 'N'],
+  ['n02', 'Phaseolus vulgaris nitrogen deficiency.jpg', 'deficiencia', 'N'],
+  ['n03', 'Spitskool stikstofgebrek (nitrogen deficiency) Brassica oleracea convar. capitata var. alba.jpg', 'deficiencia', 'N']
+];
+
+const FORMATO_BANCO = 'phytodiagnostix/1';
+const PLANTILLA_BANCO = {
+  formato: FORMATO_BANCO,
+  titulo: 'Banco de prácticas de la asignatura',
+  autor: 'Nombre y apellidos del profesor o profesora',
+  fotos: [
+    {id: 'prof-001', url: 'fotos/xilema-01.jpg', modo: 'anatomia', etiqueta: 'xilema', titulo: 'Corte transversal de tallo de girasol', aumento: '100x', tincion: 'safranina–verde rápido', autoria: 'Nombre del autor de la foto', licencia: 'CC BY 4.0', nota: 'Fíjate en el grosor de las paredes.'},
+    {id: 'prof-002', commons: 'Nombre del fichero en Commons.jpg', modo: 'anatomia', etiqueta: 'estomas', tambien: ['epidermis']},
+    {id: 'prof-003', url: 'fotos/tomate-ca.jpg', modo: 'deficiencia', etiqueta: 'Ca', titulo: 'Fruto de tomate con podredumbre apical', autoria: 'Nombre', licencia: 'CC BY-SA 4.0'}
+  ],
+  corrige: {},
+  ocultar: []
+};
+
+/* ══ NÚCLEO: lógica pura (sin DOM). Aquí decide el código; la IA solo propone. ══ */
+
+/* ── Commons ── */
+const COMMONS = 'https://commons.wikimedia.org';
+const nombreCommons = f => String(f).replace(/^(?:File|Archivo):/i, '').replace(/_/g, ' ').trim();
+const urlCommons = (f, ancho = 640) => `${COMMONS}/wiki/Special:FilePath/${encodeURIComponent(nombreCommons(f).replace(/ /g, '_'))}?width=${ancho}`;
+const paginaCommons = f => `${COMMONS}/wiki/File:${encodeURIComponent(nombreCommons(f).replace(/ /g, '_'))}`;
+
+/* ── vocabulario y corrección ── */
+const claveValida = (modo, k) => !!(VOCAB[modo] && Object.prototype.hasOwnProperty.call(VOCAB[modo], k));
+const etiquetaDe = (modo, k) => (VOCAB[modo] && VOCAB[modo][k] ? VOCAB[modo][k][0] : String(k));
+/* ¿qué estructuras nombra el texto? Términos de ≤2 letras: solo si son la respuesta entera */
+function resuelveClaves(modo, texto) {
+  const t = norm(texto); if (!t) return [];
+  const hallado = [];
+  for (const [k, [, terms]] of Object.entries(VOCAB[modo] || {})) {
+    const ok = terms.some(x => x.length <= 2 ? t === x : (' ' + t + ' ').includes(' ' + x + ' '));
+    if (ok) hallado.push(k);
+  }
+  return hallado;
+}
+/* veredicto de una respuesta frente a la etiqueta de la foto: lo calcula el código */
+function juzga(foto, texto) {
+  const ks = resuelveClaves(foto.modo, texto);
+  if (!ks.length) return {estado: 'noreconocida', claves: []};
+  if (ks.length > 1) return {estado: 'ambigua', claves: ks};
+  const k = ks[0], validas = [foto.etiqueta, ...(foto.tambien || [])];
+  if (k === foto.etiqueta) return {estado: 'correcta', clave: k, claves: ks};
+  if (validas.includes(k)) return {estado: 'correcta', clave: k, claves: ks, alternativa: true};
+  return {estado: 'incorrecta', clave: k, claves: ks};
+}
+/* rasgos que el estudiante marcó: ¿encajan con la estructura correcta? (aviso formativo; una foto suele mostrar varios tejidos) */
+function valoraObserv(modo, etiqueta, marcados) {
+  return OBSERV.filter(o => o.modo === modo && marcados.includes(o.id)).map(o => ({
+    id: o.id, t: o.t, encaja: o.claves.includes(etiqueta), otras: o.claves.filter(c => c !== etiqueta).map(c => etiquetaDe(modo, c))
+  }));
+}
+
+/* ── validación del banco del profesorado (JSON) ── */
+const RX_REL = /^(?![a-z][a-z0-9+.-]*:|\/|\\)(?!.*(?:\.\.|\\|\/\/))[\w\-. ()%/]+\.(?:jpe?g|png|webp|gif)$/i;
+const RX_DATA = /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/;
+const RX_WM = /^https:\/\/upload\.wikimedia\.org\/[^\s"'<>]+\.(?:jpe?g|png|webp|gif)(?:\?[^\s"'<>]*)?$/i;
+const MAX_BANCO = 600, MAX_DATA_TOTAL = 6000000;
+function validaBanco(obj) {
+  const res = {fotos: [], errores: [], avisos: [], titulo: '', autor: '', corrige: {}, ocultar: []};
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) { res.errores.push('El fichero no es un objeto JSON.'); return res; }
+  if (obj.formato !== FORMATO_BANCO) { res.errores.push(`Falta «formato»: "${FORMATO_BANCO}" (el fichero dice ${JSON.stringify(obj.formato ?? null)}).`); return res; }
+  res.titulo = String(obj.titulo || '').slice(0, 120); res.autor = String(obj.autor || '').slice(0, 120);
+  if (!Array.isArray(obj.fotos)) { res.errores.push('«fotos» debe ser una lista.'); return res; }
+  if (obj.fotos.length > MAX_BANCO) res.avisos.push(`Solo se leen las primeras ${MAX_BANCO} fotos.`);
+  const vistos = new Set(BANCO_COMMONS.map(b => b[0])); let datos = 0;
+  obj.fotos.slice(0, MAX_BANCO).forEach((f, i) => {
+    const n = `Foto ${i + 1}${f && f.id ? ` («${String(f.id).slice(0, 30)}»)` : ''}`;
+    if (!f || typeof f !== 'object') return res.errores.push(`${n}: no es un objeto.`);
+    const modo = f.modo === 'deficiencia' ? 'deficiencia' : f.modo === 'anatomia' ? 'anatomia' : null;
+    if (!modo) return res.errores.push(`${n}: «modo» debe ser "anatomia" o "deficiencia".`);
+    if (!claveValida(modo, f.etiqueta)) return res.errores.push(`${n}: «etiqueta» "${f.etiqueta}" no está en la lista de ${MODOS[modo]} (${Object.keys(VOCAB[modo]).join(', ')}).`);
+    const tambien = (Array.isArray(f.tambien) ? f.tambien : []).filter(k => claveValida(modo, k) && k !== f.etiqueta);
+    if (Array.isArray(f.tambien) && tambien.length !== f.tambien.length) res.avisos.push(`${n}: se ignoraron valores de «tambien» que no son etiquetas válidas.`);
+    let url = null, commons = null;
+    if (f.commons) { commons = nombreCommons(f.commons); if (!/\.(?:jpe?g|png|webp|gif)$/i.test(commons)) return res.errores.push(`${n}: «commons» debe ser un fichero de imagen (jpg, png, webp o gif).`); }
+    else if (typeof f.url === 'string' && (RX_REL.test(f.url) || RX_WM.test(f.url) || (RX_DATA.test(f.url) && f.url.length < 400000 && (datos += f.url.length) < MAX_DATA_TOTAL))) url = f.url;
+    else return res.errores.push(`${n}: «url» no válida. Usa una ruta relativa dentro del repositorio (p. ej. fotos/xilema-01.jpg), una dirección de upload.wikimedia.org o un nombre de fichero de Commons en «commons».`);
+    let id = String(f.id || '').trim().replace(/[^\w.-]/g, '-').slice(0, 40) || `prof-${String(i + 1).padStart(3, '0')}`;
+    if (vistos.has(id)) return res.errores.push(`${n}: el id «${id}» está repetido (o coincide con una foto de Commons del banco base).`);
+    vistos.add(id);
+    const txt = (v, m = 160) => String(v ?? '').slice(0, m);
+    res.fotos.push({id, origen: 'profesor', modo, etiqueta: f.etiqueta, tambien, url, commons, titulo: txt(f.titulo), nota: txt(f.nota, 400), aumento: txt(f.aumento, 30), tincion: txt(f.tincion, 60), especie: txt(f.especie, 80), autoria: txt(f.autoria), licencia: txt(f.licencia, 60)});
+  });
+  if (obj.corrige && typeof obj.corrige === 'object') for (const [id, k] of Object.entries(obj.corrige)) {
+    const b = [...BANCO_COMMONS].find(x => x[0] === id);
+    if (!b) res.avisos.push(`«corrige»: no hay ninguna foto del banco base con id «${id}».`);
+    else if (!claveValida(b[2], k)) res.avisos.push(`«corrige»: «${k}» no es una etiqueta válida para ${id}.`);
+    else res.corrige[id] = k;
+  }
+  if (Array.isArray(obj.ocultar)) res.ocultar = obj.ocultar.map(String).filter(id => BANCO_COMMONS.some(x => x[0] === id));
+  return res;
+}
+
+/* ── banco activo: base + banco del repositorio + banco abierto a mano, con los ajustes locales ── */
+function bancoActivo(st = S, incluirOcultas = false) {
+  const aj = st.ajustes || {ocultar: [], corrige: {}};
+  const ocultar = new Set([...(st.repoAjustes?.ocultar || []), ...(st.extraAjustes?.ocultar || []), ...(aj.ocultar || [])]);
+  const corrige = {...(st.repoAjustes?.corrige || {}), ...(st.extraAjustes?.corrige || {}), ...(aj.corrige || {})};
+  const base = BANCO_COMMONS.map(([id, commons, modo, etiqueta, tambien]) => ({id, origen: 'commons', modo, etiqueta: corrige[id] && claveValida(modo, corrige[id]) ? corrige[id] : etiqueta, etiquetaOriginal: etiqueta, tambien: tambien || [], commons, corregida: !!(corrige[id] && corrige[id] !== etiqueta)}));
+  const ids = new Set(base.map(b => b.id));
+  const prof = [...(st.repoFotos || []), ...(st.extraFotos || [])].filter(f => !ids.has(f.id) && ids.add(f.id));
+  return [...base, ...prof].map(f => ({...f, oculta: ocultar.has(f.id)})).filter(f => incluirOcultas || !f.oculta);
+}
+const fotoPorId = (id, st = S) => bancoActivo(st, true).find(f => f.id === id) || null;
+const urlFoto = (f, ancho = 640) => f.propia ? f.dataUrl : f.commons ? urlCommons(f.commons, ancho) : f.url;
+
+/* ── progreso (lo calcula el código) ── */
+const PROG0 = () => ({n: 0, ok: 0, porClave: {}, hist: []});
+function registra(prog, foto, respuesta, v) {
+  const p = prog || PROG0(); p.n++;
+  const ok = v.estado === 'correcta'; if (ok) p.ok++;
+  const k = `${foto.modo}:${foto.etiqueta}`; const c = p.porClave[k] || (p.porClave[k] = {n: 0, ok: 0}); c.n++; if (ok) c.ok++;
+  p.hist.unshift({t: Date.now(), id: foto.id, modo: foto.modo, etiqueta: foto.etiqueta, resp: String(respuesta).slice(0, 80), ok});
+  p.hist.length = Math.min(p.hist.length, 200);
+  return p;
+}
+const ultimoResultado = (prog, id) => (prog?.hist || []).find(h => h.id === id) || null;
+/* estructuras ordenadas de peor a mejor acierto (mínimo 1 intento) */
+function peoresClaves(prog, modo) {
+  return Object.entries(prog?.porClave || {}).filter(([k, c]) => k.startsWith(modo + ':') && c.n > 0)
+    .map(([k, c]) => ({clave: k.split(':')[1], n: c.n, ok: c.ok, pct: c.ok / c.n})).sort((a, b) => a.pct - b.pct || b.n - a.n);
+}
+function eligeAzar(lista, evita = [], rnd = Math.random) {
+  const cand = lista.filter(f => !evita.includes(f.id)); const pool = cand.length ? cand : lista;
+  return pool.length ? pool[Math.floor(rnd() * pool.length)] : null;
+}
+function eligeRepaso(lista, prog, modo, evita = [], rnd = Math.random) {
+  const malas = peoresClaves(prog, modo).filter(x => x.pct < 1).map(x => x.clave);
+  if (!malas.length) return null;
+  const fallos = new Set((prog.hist || []).filter(h => !h.ok).map(h => h.id));
+  const delFallo = lista.filter(f => fallos.has(f.id) && !evita.includes(f.id));
+  const delTema = lista.filter(f => malas.slice(0, 2).includes(f.etiqueta) && !evita.includes(f.id));
+  return eligeAzar(delFallo.length ? delFallo : delTema, evita, rnd);
+}
+
+/* ── lectura de la respuesta de la IA: solo vocabulario controlado ── */
+function saneaIA(raw, modo) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const vista = claveValida(modo, r.estructura_vista) ? r.estructura_vista : 'dudosa';
+  const confianza = ['alta', 'media', 'baja'].includes(r.confianza) ? r.confianza : 'baja';
+  const lista = vista !== 'dudosa' ? FICHAS[modo][vista].rasgos : [];
+  const idx = [...new Set((Array.isArray(r.visibles) ? r.visibles : []).map(x => /^r([1-9])$/.exec(String(x).trim())).filter(Boolean).map(m => +m[1] - 1).filter(i => i < lista.length))];
+  const descartados = (Array.isArray(r.visibles) ? r.visibles.length : 0) - idx.length;
+  const comentario = String(r.comentario || '').replace(/\s+/g, ' ').trim().slice(0, 420);
+  return {vista, confianza, rasgos: idx.map(i => lista[i]), descartados: Math.max(0, descartados), comentario};
+}
+/* contraste de la IA con la etiqueta (o, sin etiqueta, con la respuesta del estudiante) */
+function contrasteIA(ia, foto, v) {
+  if (ia.vista === 'dudosa') return {tipo: 'dudosa'};
+  if (foto.propia) return {tipo: ia.confianza === 'baja' ? 'dudosa' : (v.clave === ia.vista ? 'coincide-alumno' : 'difiere-alumno')};
+  const validas = [foto.etiqueta, ...(foto.tambien || [])];
+  return {tipo: validas.includes(ia.vista) ? 'coincide' : 'discrepa'};
+}
+
+/* ── Commons: lectura de la API ── */
+const stripHtml = h => { try { return new DOMParser().parseFromString(String(h || ''), 'text/html').body.textContent.replace(/\s+/g, ' ').trim(); } catch { return String(h || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); } };
+function parseaMeta(json) {
+  const out = {}; const pages = json?.query?.pages || {};
+  for (const p of Object.values(pages)) {
+    const ii = p.imageinfo?.[0]; if (!ii) continue; const em = ii.extmetadata || {};
+    out[nombreCommons(p.title)] = {autor: stripHtml(em.Artist?.value).slice(0, 160), licencia: stripHtml(em.LicenseShortName?.value).slice(0, 60), licUrl: /^https?:\/\//.test(em.LicenseUrl?.value || '') ? em.LicenseUrl.value : '', pagina: /^https:\/\/commons\.wikimedia\.org\//.test(ii.descriptionurl || '') ? ii.descriptionurl : paginaCommons(p.title), thumb: /^https:\/\/upload\.wikimedia\.org\//.test(ii.thumburl || '') ? ii.thumburl : ''};
+  }
+  return out;
+}
+function parseaBusqueda(json) {
+  return Object.values(json?.query?.pages || {}).filter(p => p.imageinfo?.[0] && /\.(jpe?g|png|webp)$/i.test(p.title)).sort((a, b) => (a.index || 0) - (b.index || 0)).map(p => {
+    const ii = p.imageinfo[0], em = ii.extmetadata || {};
+    return {commons: nombreCommons(p.title), thumb: /^https:\/\/upload\.wikimedia\.org\//.test(ii.thumburl || '') ? ii.thumburl : urlCommons(p.title, 240), licencia: stripHtml(em.LicenseShortName?.value).slice(0, 60), autor: stripHtml(em.Artist?.value).slice(0, 120)};
+  });
+}
+const apiMetaUrl = nombres => `${COMMONS}/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=extmetadata%7Curl&iiextmetadatafilter=Artist%7CLicenseShortName%7CLicenseUrl&iiurlwidth=1024&titles=${encodeURIComponent(nombres.map(n => 'File:' + nombreCommons(n)).join('|'))}`;
+const apiBuscaUrl = q => `${COMMONS}/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=24&gsrsearch=${encodeURIComponent('filetype:bitmap ' + q)}&prop=imageinfo&iiprop=extmetadata%7Curl&iiextmetadatafilter=Artist%7CLicenseShortName&iiurlwidth=240`;
+
+/* ── exportaciones puras ── */
+function bancoComoJSON(st = S, borrador = []) {
+  const aj = st.ajustes || {};
+  return JSON.stringify({formato: FORMATO_BANCO, titulo: 'Banco de prácticas', autor: '', fotos: borrador, corrige: aj.corrige || {}, ocultar: aj.ocultar || []}, null, 2);
+}
+
+/* ══ INTERFAZ: pantallas y flujo. La corrección la hace nucleo.js; la IA solo da una segunda opinión contrastada. ══ */
+const STEPS = ['Inicio', 'Elegir foto', 'Observar', 'Resultado'];
+const HUBS = ['Profesorado', 'Progreso'];
+const NAV = [['Empezar', 'Elige una foto del banco o sube la tuya.'], ['Siguiente: observar', 'Toca una foto para empezar.'], ['Siguiente: resultado', 'Responde y pulsa «Comprobar».'], ['Otra foto', 'Revisa el resultado y sigue practicando.']];
+const RENDER = {0: pintaInicio, 1: pintaGaleria, 2: pintaObservar, 3: pintaResultado, 4: pintaProf, 5: pintaProg};
+const GLOS = [
+  ['¿Cómo se corrige?', 'Cada foto tiene una etiqueta. El código compara tu respuesta con ella; la IA no decide si aciertas.'],
+  ['¿De dónde salen las etiquetas?', 'En el banco base, del título del fichero en Wikimedia Commons y de su categoría, no de una revisión foto a foto. Si crees que alguna es errónea, díselo a tu profesorado: puede corregirla.'],
+  ['Una foto, varios tejidos', 'Una microfotografía suele mostrar más de un tejido. La etiqueta indica el que protagoniza la foto; tus rasgos marcados son un aviso formativo y no puntúan.'],
+  ['Segunda opinión de la IA', 'Es opcional y usa tu propia clave. La IA solo puede elegir de la lista cerrada y los rasgos que cite se limitan a los de la ficha; si no coincide con la etiqueta, se te avisa y prevalece la etiqueta.'],
+  ['Mis propias fotos', 'Si subes una microfotografía tuya no hay etiqueta ni veredicto del código: la IA da solo una pista orientativa. No subas imágenes con datos personales.'],
+  ['Autoría y licencia', 'Las fotos del banco están en Wikimedia Commons. Su autoría y licencia exactas se leen de Commons y se muestran bajo cada foto.'],
+  ['Profesorado', 'Puedes añadir tus fotos con un JSON (banco-profesor.json en el repositorio, o abriéndolo a mano) y corregir u ocultar fotos del banco base.'],
+  ['Tu clave de IA', 'Funciona con OpenAI, Google Gemini o Anthropic Claude. Se guarda solo en este navegador. Sin clave, todo funciona menos la segunda opinión.']
+];
+let S = {modo: 'anatomia', origen: 'todas', fotoId: null, resp: '', obs: [], desc: '', res: null, ia: null, progreso: PROG0(), ajustes: {ocultar: [], corrige: {}}, repoFotos: [], repoAjustes: null, repoInfo: null, extraFotos: [], extraAjustes: null, extraInfo: null, discrep: [], borrador: [], nombre: '', recientes: [], envioOK: false};
+let PROPIA = null, BUS = [], busy = false;
+
+/* ── utilidades ── */
+const listaFiltrada = () => bancoActivo().filter(f => f.modo === S.modo && (S.origen === 'todas' || f.origen === S.origen));
+const fotoActual = () => S.fotoId === 'propia' ? PROPIA : (S.fotoId ? fotoPorId(S.fotoId) : null);
+const nombreOrigen = f => f.propia ? 'Tu foto' : f.origen === 'commons' ? 'Wikimedia Commons' : 'Mi profesorado';
+const fechaCorta = t => new Date(t).toLocaleString('es-ES', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
+document.addEventListener('error', e => { const t = e.target; if (t && t.tagName === 'IMG' && t.dataset.ph) { t.hidden = true; const w = t.closest('.ph-im, figure, .ph-zoomwrap, .ph-bth'); if (w) w.classList.add('ph-sin'); } }, true);
+
+/* ── metadatos de Commons (autoría y licencia): se leen de la API, nunca se afirman de memoria ── */
+const META_K = APP + '_meta';
+let META = {}; try { META = JSON.parse(localStorage.getItem(META_K) || '{}'); } catch {}
+async function cargaMeta(nombres) {
+  const ns = [...new Set(nombres.map(nombreCommons))], falta = ns.filter(n => !META[n]);
+  for (const g of chunk(falta, 40)) {
+    const r = await fetch(apiMetaUrl(g)); if (!r.ok) throw new Error('Commons respondió ' + r.status);
+    Object.assign(META, parseaMeta(await r.json()));
+  }
+  try { localStorage.setItem(META_K, JSON.stringify(META)); } catch {}
+  return META;
+}
+async function pintaCredito(f, el) {
+  if (f.propia) { el.textContent = 'Tu foto no sale de este navegador salvo que pidas la segunda opinión de la IA.'; return; }
+  if (!f.commons) { el.innerHTML = `Foto del profesorado${f.autoria ? ' · Autoría: ' + esc(f.autoria) : ''}${f.licencia ? ' · Licencia: ' + esc(f.licencia) : ''}.${f.autoria || f.licencia ? '' : ' (El JSON no indica autoría ni licencia.)'}`; return; }
+  el.textContent = 'Leyendo autoría y licencia en Commons…';
+  const enlace = `<a href="${esc(paginaCommons(f.commons))}" target="_blank" rel="noopener">Ficha en Commons</a>`;
+  try {
+    const m = (await cargaMeta([f.commons]))[nombreCommons(f.commons)];
+    if (!m) { el.innerHTML = `No se encontró ahora esta foto en Commons (puede haberse renombrado). ${enlace}`; return; }
+    const lic = m.licUrl ? `<a href="${esc(m.licUrl)}" target="_blank" rel="noopener">${esc(m.licencia || 'licencia')}</a>` : esc(m.licencia || 'ver ficha');
+    el.innerHTML = `Wikimedia Commons · Autoría: ${esc(m.autor || 'ver ficha')} · Licencia: ${lic} · <a href="${esc(m.pagina)}" target="_blank" rel="noopener">Ficha en Commons</a>`;
+  } catch { el.innerHTML = `Foto de Wikimedia Commons. No se pudo leer ahora la autoría y la licencia: consúltalas en su ${enlace}.`; }
+}
+
+/* ── banco del repositorio (banco-profesor.json) ── */
+async function cargaBancoRepo() {
+  try {
+    const r = await fetch('banco-profesor.json', {cache: 'no-store'});
+    if (!r.ok) { S.repoFotos = []; S.repoAjustes = null; S.repoInfo = null; return; }
+    const v = validaBanco(await r.json());
+    S.repoFotos = v.fotos; S.repoAjustes = {corrige: v.corrige, ocultar: v.ocultar};
+    S.repoInfo = {titulo: v.titulo, autor: v.autor, n: v.fotos.length, errores: v.errores, avisos: v.avisos};
+  } catch (e) { if (e instanceof SyntaxError) { S.repoFotos = []; S.repoAjustes = null; S.repoInfo = {n: 0, titulo: '', errores: ['banco-profesor.json no es un JSON válido: ' + e.message], avisos: []}; } /* sin red o abierto como fichero: se conserva lo guardado */ }
+}
+
+/* ══ 0 · inicio ══ */
+function pintaInicio() { $('inicioProj').innerHTML = S.progreso && S.progreso.n ? `Llevas <b>${S.progreso.n}</b> respuesta${S.progreso.n === 1 ? '' : 's'} guardada${S.progreso.n === 1 ? '' : 's'} en este navegador. <button class="btn btn-ghost btn-sm" id="btnCont" type="button">Ver mi progreso</button>` : ''; }
+$('btnStart').onclick = () => go(1);
+document.addEventListener('click', e => { if (e.target.id === 'btnCont') go(5); });
+$('btnProg').onclick = () => go(5); $('btnProf').onclick = () => go(4);
+const EJEMPLO_IA = {vista: 'colenquima', confianza: 'media', rasgos: [FICHAS.anatomia.colenquima.rasgos[0], FICHAS.anatomia.colenquima.rasgos[2]], descartados: 0, comentario: 'Ejemplo precalculado: aquí aparecería el comentario de la IA sobre tu descripción.', contr: {tipo: 'coincide'}, ejemplo: true};
+$('btnEjemplo').onclick = () => {
+  const f = fotoPorId('c03'); S.modo = 'anatomia'; S.fotoId = 'c03'; S.resp = 'Parénquima'; S.obs = ['a4']; S.desc = 'Veo células grandes con paredes finas.';
+  const v = juzga(f, S.resp); S.res = {...v, resp: S.resp, obs: ['a4'], t: Date.now(), fotoId: 'c03', ejemplo: true}; S.ia = EJEMPLO_IA;
+  guarda(); go(3); toast('Ejemplo de demostración: no cuenta en tu progreso ni usa la IA. La foto necesita conexión a Commons.', 7000);
+};
+
+/* ══ 1 · elegir foto ══ */
+function pintaGaleria() {
+  $$('#segModo button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.modo === S.modo)));
+  $('selOrigen').value = S.origen;
+  const l = listaFiltrada(), tipos = new Set(l.map(f => f.etiqueta)).size;
+  $('galInfo').textContent = `${l.length} foto${l.length === 1 ? '' : 's'} de ${MODOS[S.modo].toLowerCase()}.` + (l.length && tipos < 3 ? ` Solo hay ${tipos} tipo${tipos === 1 ? '' : 's'} de respuesta correcta en esta selección: el profesorado puede ampliar el banco con su JSON.` : '');
+  $('galeria').innerHTML = l.length ? l.map((f, i) => {
+    const h = ultimoResultado(S.progreso, f.id);
+    return `<button type="button" class="ph-th" data-id="${esc(f.id)}" aria-label="Foto ${i + 1}${h ? (h.ok ? ', acertada' : ', fallada') : ''}"><span class="ph-im"><img src="${esc(urlFoto(f, 320))}" alt="" loading="lazy" decoding="async" data-ph="1"></span><span class="ph-n">${i + 1}</span>${h ? `<span class="ph-mk ${h.ok ? 'ok' : 'ko'}">${h.ok ? '✓' : '✗'}</span>` : ''}${f.origen === 'profesor' ? '<span class="ph-or">Prof.</span>' : ''}</button>`;
+  }).join('') : '<p class="empty">No hay fotos con este filtro. Cambia el origen o añade fotos desde «Profesorado».</p>';
+}
+$$('#segModo button').forEach(b => b.onclick = () => { S.modo = b.dataset.modo; guarda(); pintaGaleria(); });
+$('selOrigen').onchange = e => { S.origen = e.target.value; guarda(); pintaGaleria(); };
+$('galeria').addEventListener('click', e => { const b = e.target.closest('.ph-th'); if (b) eligeFoto(b.dataset.id); });
+function eligeFoto(id) {
+  S.fotoId = id; S.resp = ''; S.obs = []; S.desc = ''; S.res = null; S.ia = null;
+  S.recientes = [id, ...(S.recientes || []).filter(x => x !== id)].slice(0, 6); guardaYa(); go(2);
+}
+$('btnAzar').onclick = () => { const f = eligeAzar(listaFiltrada(), S.recientes || []); if (!f) return toast('No hay fotos con este filtro'); eligeFoto(f.id); };
+$('btnRepaso').onclick = () => {
+  const f = eligeRepaso(listaFiltrada(), S.progreso, S.modo, S.recientes || []);
+  if (!f) return toast(S.progreso.n ? 'No tienes fallos pendientes en esta selección. ¡Sigue así!' : 'Aún no hay fallos que repasar: responde primero a alguna foto');
+  eligeFoto(f.id);
+};
+$('btnPropia').onclick = () => $('filePropia').click();
+$('filePropia').onchange = async e => {
+  const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast('Usa una imagen JPG, PNG o WebP');
+  if (file.size > 15 * 1024 * 1024) return toast('La imagen pesa más de 15 MB: reduce su tamaño');
+  try {
+    const dataUrl = await bitmapADataJpeg(file, 1280);
+    PROPIA = {id: 'propia', propia: true, origen: 'propia', modo: S.modo, etiqueta: null, tambien: [], dataUrl};
+    S.fotoId = 'propia'; S.resp = ''; S.obs = []; S.desc = ''; S.res = null; S.ia = null; go(2);
+  } catch { toast('No se pudo leer la imagen'); }
+};
+async function bitmapADataJpeg(blob, max) {
+  const bm = await createImageBitmap(blob), k = Math.min(1, max / Math.max(bm.width, bm.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bm.width * k); c.height = Math.round(bm.height * k);
+  const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(bm, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', 0.86);
+}
+
+/* ══ 2 · observar y responder ══ */
+function pintaObservar() {
+  const f = fotoActual();
+  if (!f) { setTimeout(() => go(1)); return; }
+  const im = $('phImg'); im.dataset.ph = '1'; im.hidden = false; im.closest('figure').classList.remove('ph-sin'); im.src = urlFoto(f, 900);
+  const n = f.propia ? 0 : listaFiltrada().findIndex(x => x.id === f.id) + 1;
+  $('phCap').textContent = f.propia ? 'Tu microfotografía (sin etiqueta)' : `${n ? 'Foto ' + n + ' · ' : ''}${nombreOrigen(f)}${f.aumento ? ' · ' + f.aumento : ''}${f.tincion ? ' · ' + f.tincion : ''}`;
+  $('tPregunta').textContent = f.modo === 'anatomia' ? '¿Qué tejido o estructura ves?' : '¿Qué carencia sospechas?';
+  $('obsLede').textContent = f.propia ? 'Tu foto no tiene etiqueta: tu respuesta se contrastará solo con la segunda opinión de la IA (necesita clave) y es orientativa.' : 'Mira la foto con calma, marca lo que ves y di qué es. Una foto puede mostrar varios tejidos: responde por el que más destaca.';
+  $('ops').innerHTML = Object.entries(VOCAB[f.modo]).map(([k, [lab]]) => `<button type="button" class="ph-op" data-k="${esc(k)}" aria-pressed="false">${esc(lab)}</button>`).join('');
+  $('obsl').innerHTML = OBSERV.filter(o => o.modo === f.modo).map(o => `<label class="fa-chk ph-ob"><input type="checkbox" value="${o.id}" ${S.obs.includes(o.id) ? 'checked' : ''}> ${esc(o.t)}</label>`).join('');
+  $('resp').value = S.resp; $('desc').value = S.desc; $('estado').textContent = ''; marcaOps();
+  $('btnComprobar').lastChild.textContent = f.propia ? 'Pedir valoración a la IA' : 'Comprobar';
+}
+function marcaOps() { const f = fotoActual(); if (!f) return; const ks = resuelveClaves(f.modo, $('resp').value); $$('#ops .ph-op').forEach(b => b.setAttribute('aria-pressed', String(ks.length === 1 && ks[0] === b.dataset.k))); }
+$('ops').addEventListener('click', e => { const b = e.target.closest('.ph-op'); const f = fotoActual(); if (!b || !f) return; $('resp').value = etiquetaDe(f.modo, b.dataset.k); S.resp = $('resp').value; marcaOps(); guarda(); });
+$('resp').addEventListener('input', () => { S.resp = $('resp').value; marcaOps(); guarda(); });
+$('desc').addEventListener('input', () => { S.desc = $('desc').value; guarda(); });
+$('obsl').addEventListener('change', () => { S.obs = $$('#obsl input:checked').map(i => i.value); guarda(); });
+$('btnZoom').onclick = () => { const f = fotoActual(); if (!f) return; const z = $('zoomImg'); z.dataset.ph = '1'; z.hidden = false; z.src = urlFoto(f, 1600); $('mZoom').classList.add('on'); };
+
+$('btnComprobar').onclick = async () => {
+  if (busy) return; const f = fotoActual(); if (!f) return go(1);
+  const resp = $('resp').value.trim(); if (!resp) return toast('Escribe o elige tu respuesta');
+  const ks = resuelveClaves(f.modo, resp);
+  if (!ks.length) return toast(`No reconozco «${resp}» como ${MODOS[f.modo].toLowerCase()}. Elige una de las opciones.`, 6000);
+  if (ks.length > 1) return toast(`Tu respuesta nombra varias opciones (${ks.map(k => etiquetaDe(f.modo, k)).join(', ')}). Elige una.`, 6000);
+  S.resp = resp; S.obs = $$('#obsl input:checked').map(i => i.value); S.desc = $('desc').value;
+  if (f.propia) {
+    if (!pideClave()) return;
+    busy = true; $('btnComprobar').disabled = true; $('estado').innerHTML = '<span class="spin"></span> Consultando a la IA…';
+    try { const ok = await pedirIA(f, {estado: 'propia', clave: ks[0]}); if (!ok) { $('estado').textContent = ''; return; } S.res = {estado: 'propia', clave: ks[0], resp, obs: S.obs.slice(), t: Date.now(), fotoId: 'propia'}; await guardaYa(); go(3); }
+    catch (e) { $('estado').textContent = e.message; toast(e.message, 8000); }
+    finally { busy = false; $('btnComprobar').disabled = false; }
+    return;
+  }
+  const v = juzga(f, resp);
+  S.progreso = registra(S.progreso, f, resp, v);
+  S.res = {...v, resp, obs: S.obs.slice(), t: Date.now(), fotoId: f.id}; S.ia = null;
+  await guardaYa(); go(3);
+};
+
+/* ══ 3 · resultado ══ */
+const fichaHtml = (modo, k) => { const fi = FICHAS[modo][k]; return `<div class="ph-ficha"><b>${esc(etiquetaDe(modo, k))}</b><p>${esc(fi.que)}</p><ul class="ph-ul">${fi.rasgos.map(r => `<li>${esc(r)}</li>`).join('')}</ul></div>`; };
+function pintaResultado() {
+  const r = S.res, f = fotoActual();
+  if (!r || !f) { $('resultado').innerHTML = '<div class="card"><p class="empty">Aún no hay resultado. Elige una foto y pulsa «Comprobar».</p></div>'; $('cardIA').hidden = true; return; }
+  const modo = f.modo, E = k => etiquetaDe(modo, k); let h = '';
+  if (r.ejemplo) h += '<div class="aviso">Ejemplo de demostración: no cuenta en tu progreso y la segunda opinión está precalculada.</div>';
+  if (r.estado === 'correcta') h += `<div class="okbox"><b>✓ Correcto.</b> Es ${esc(E(r.clave))}${r.alternativa ? ` (también se acepta; la etiqueta principal de esta foto es ${esc(E(f.etiqueta))})` : ''}.</div>`;
+  else if (r.estado === 'incorrecta') h += `<div class="aviso"><b>✗ No es ${esc(E(r.clave))}.</b> La etiqueta de esta foto es <b>${esc(E(f.etiqueta))}</b>.</div>`;
+  else h += `<div class="aviso">Tu foto no tiene etiqueta, así que el código no puede darte un veredicto. Tu respuesta fue <b>${esc(E(r.clave))}</b>; abajo tienes la pista de la IA, que puede equivocarse.</div>`;
+  h += `<div class="card ph-res"><figure class="ph-bth"><img src="${esc(urlFoto(f, 480))}" alt="Foto evaluada" data-ph="1"></figure><div>`;
+  if (!f.propia) {
+    if (f.titulo) h += `<p><b>${esc(f.titulo)}</b>${f.especie ? ' · <i>' + esc(f.especie) + '</i>' : ''}</p>`;
+    if (f.nota) h += `<p class="help">Nota del profesorado: ${esc(f.nota)}</p>`;
+    h += `<h3>${r.estado === 'correcta' ? 'Cómo reconocerlo' : 'La respuesta correcta'}</h3>${fichaHtml(modo, f.etiqueta)}`;
+    if (r.estado === 'incorrecta') {
+      const dif = FICHAS[modo][f.etiqueta].confunde[r.clave] || FICHAS[modo][r.clave].confunde[f.etiqueta];
+      h += `<h3>Por qué no es ${esc(E(r.clave))}</h3><p>${esc(dif || 'Compara las dos fichas: fíjate en los rasgos que no coinciden.')}</p>${fichaHtml(modo, r.clave)}`;
+    }
+    const ov = valoraObserv(modo, f.etiqueta, r.obs || []);
+    if (ov.length) h += `<h3>Tus observaciones</h3><ul class="ph-ul">${ov.map(o => `<li>${o.encaja ? '✓' : '·'} ${esc(o.t)} — ${o.encaja ? 'encaja con ' + esc(E(f.etiqueta)) : 'es más típico de ' + esc(o.otras.join(' / ') || 'otra estructura') + '; ¿lo ves de verdad? (una foto puede mostrar varios tejidos)'}</li>`).join('')}</ul>`;
+  } else h += fichaHtml(modo, r.clave);
+  h += `<p class="help" id="credito"></p></div></div>`;
+  $('resultado').innerHTML = h; pintaCredito(f, $('credito')); pintaIA();
+}
+function pintaIA() {
+  const r = S.res, f = fotoActual(); $('cardIA').hidden = !(r && f); if (!r || !f) return;
+  const ia = S.ia, cuerpo = $('iaBloque');
+  if (!ia) {
+    cuerpo.innerHTML = `<p class="help" style="margin-top:0">Opcional. Envía la foto y tu descripción a tu proveedor de IA (antes verás lo que sale). La IA elige de la lista cerrada y el código contrasta su elección${f.propia ? '' : ' con la etiqueta'}.</p><div class="actions" style="margin-top:0"><button class="btn btn-ghost" id="btnIA2" type="button"><svg class="i"><use href="#i-sparkles"/></svg>Pedir segunda opinión</button></div><p class="help" id="iaEstado2"></p>`;
+    $('btnIA2').onclick = async () => { if (busy) return; if (!pideClave()) return; busy = true; $('btnIA2').disabled = true; $('iaEstado2').innerHTML = '<span class="spin"></span> Consultando…'; try { await pedirIA(f, r); } catch (e) { toast(e.message, 8000); } finally { busy = false; pintaIA(); } };
+    return;
+  }
+  const modo = f.modo, c = ia.contr || {tipo: 'dudosa'}; let h = '';
+  if (ia.vista === 'dudosa') h += '<div class="aviso">La IA no está segura de qué estructura es. Fíate de la ficha y de la etiqueta, no de ella.</div>';
+  else {
+    h += `<p>La IA ve: <b>${esc(etiquetaDe(modo, ia.vista))}</b> <span class="fa-chip">confianza ${esc(ia.confianza)}</span></p>`;
+    if (c.tipo === 'coincide') h += '<div class="okbox">La IA coincide con la etiqueta de la foto.</div>';
+    else if (c.tipo === 'discrepa') h += `<div class="aviso"><b>La IA no coincide con la etiqueta.</b> El veredicto de arriba se calcula con la etiqueta. Si crees que la etiqueta es errónea, avisa a tu profesorado; la foto queda marcada para su revisión en este navegador.</div>`;
+    else if (c.tipo === 'coincide-alumno') h += '<div class="okbox">La IA coincide con tu respuesta (pista orientativa, sin etiqueta que la confirme).</div>';
+    else if (c.tipo === 'difiere-alumno') h += '<div class="aviso">La IA no coincide con tu respuesta. Sin etiqueta no podemos saber quién tiene razón: compara con las fichas o pregunta a tu profesorado.</div>';
+    if (ia.rasgos.length) h += `<p class="help" style="margin-bottom:4px">Rasgos que la IA dice apreciar (de la lista de la ficha, sin verificar):</p><ul class="ph-ul">${ia.rasgos.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  }
+  if (ia.descartados) h += `<p class="help">Se descartaron ${ia.descartados} rasgo(s) que la IA citó y no estaban en la lista de la ficha.</p>`;
+  if (ia.comentario) h += `<p class="help">Comentario de la IA sobre tu descripción (texto libre, no verificado): <i>${esc(ia.comentario)}</i></p>`;
+  if (ia.ejemplo) h += '<p class="help">Ejemplo precalculado: no se ha usado la IA.</p>';
+  cuerpo.innerHTML = h;
+}
+/* aviso previo al envío: imagen + texto, con confirmación. Las fotos propias se confirman siempre. */
+let envioRes = null, envioSiempre = false;
+function pideEnvio({texto, img, siempre = false, propia = false}) {
+  if (S.envioOK && !siempre) return Promise.resolve(true);
+  envioSiempre = siempre;
+  $('envioInfo').innerHTML = `<p class="sub" style="margin-top:0">Se enviarán la imagen${texto ? ' y unos ' + nf(texto.length) + ' caracteres de texto' : ''} a ${PROV[getProv()].n}.</p>${propia ? '<div class="aviso">Las imágenes no se pueden enmascarar: comprueba que no salgan caras, nombres ni etiquetas con datos personales.</div>' : ''}<p class="help">Muestra del envío:</p>`;
+  const im = $('envioImg'); im.src = img; im.hidden = false; $('envioTxt').textContent = texto || '(sin texto)';
+  $('envioOk').checked = false; $('envioSi').disabled = true; $('mEnvio').classList.add('on');
+  return new Promise(r => { envioRes = r; });
+}
+function cierraEnvio(v) { $('mEnvio').classList.remove('on'); if (envioRes) { const r = envioRes; envioRes = null; if (v && !envioSiempre) S.envioOK = true; r(v); } }
+_cierres.mEnvio = () => cierraEnvio(false);
+$('envioOk').onchange = () => { $('envioSi').disabled = !$('envioOk').checked; };
+$('envioSi').onclick = () => cierraEnvio(true); $('envioNo').onclick = () => cierraEnvio(false);
+
+async function urlADataJpeg(url, max) {
+  let r; try { r = await fetch(url, {mode: 'cors'}); } catch { throw new Error('No se pudo descargar la foto (¿sin conexión?). Prueba con otra o inténtalo más tarde.'); }
+  if (!r.ok) throw new Error(`No se pudo descargar la foto (${r.status}).`);
+  return bitmapADataJpeg(await r.blob(), max);
+}
+async function fotoParaIA(f) {
+  if (f.propia) return f.dataUrl;
+  let url = urlFoto(f, 1024);
+  if (f.commons) { try { const m = (await cargaMeta([f.commons]))[nombreCommons(f.commons)]; if (m && m.thumb) url = m.thumb; } catch {} }
+  return urlADataJpeg(url, 1024);
+}
+const promptIA = (modo, desc) => {
+  const lista = Object.entries(VOCAB[modo]).map(([k, [n]]) => `- ${k} = ${n}. Rasgos: ${FICHAS[modo][k].rasgos.map((r, i) => `r${i + 1}) ${r}`).join('; ')}`).join('\n');
+  return `${modo === 'anatomia' ? 'Observa esta microfotografía de tejido vegetal.' : 'Observa esta foto de una planta u hoja con posible carencia nutricional.'} Elige UNA opción de esta lista cerrada:\n${lista}\n\nDevuelve SOLO este JSON:\n{"estructura_vista":"<clave de la lista, o dudosa>","confianza":"alta|media|baja","visibles":["r1","r3"],"comentario":"máximo 50 palabras"}\nReglas: en "visibles" pon solo los rasgos (r1, r2…) de la opción elegida que de verdad aprecias en ESTA imagen; no marques los que no veas. Si no estás seguro, estructura_vista = "dudosa". En "comentario" valora la descripción del estudiante solo si la hay; no inventes rasgos.\nDescripción del estudiante: ${desc ? JSON.stringify(desc) : '(ninguna)'}`;
+};
+/* pide la segunda opinión; devuelve false si la persona cancela el envío */
+async function pedirIA(f, v) {
+  const desc = scrub(S.desc || '').t.slice(0, 600);
+  const texto = promptIA(f.modo, desc), img = await fotoParaIA(f);
+  if (!(await pideEnvio({texto: desc ? 'Descripción: ' + desc : '', img, siempre: !!f.propia, propia: !!f.propia}))) return false;
+  const raw = await llmJSON([{role: 'system', content: 'Eres un asistente docente de botánica. Respondes SOLO con JSON válido. No conoces la respuesta del estudiante ni la etiqueta de la foto.'}, {role: 'user', content: [{t: 'text', v: texto}, {t: 'image', mime: 'image/jpeg', data: img}]}], {max: 900});
+  const ia = saneaIA(raw, f.modo); ia.contr = contrasteIA(ia, f, v); ia.t = Date.now();
+  if (ia.contr.tipo === 'discrepa' && !(S.discrep || []).includes(f.id)) S.discrep = [...(S.discrep || []), f.id];
+  S.ia = ia; await guardaYa(); return true;
+}
+$('btnOtra').onclick = () => { const f = eligeAzar(listaFiltrada(), S.recientes || []); if (f) eligeFoto(f.id); else go(1); };
+$('btnVerProg').onclick = () => go(5);
+const CAN_NEXT = i => { if (i === 1 && !fotoActual()) return 'Elige primero una foto'; if (i === 2 && !S.res) return 'Escribe tu respuesta y pulsa «Comprobar»'; return true; };
+$('navNext').addEventListener('click', e => { if (step === 3) { e.stopImmediatePropagation(); const f = eligeAzar(listaFiltrada(), S.recientes || []); if (f) eligeFoto(f.id); else go(1); } }, true);
+
+/* ══ 4 · profesorado ══ */
+const ul = a => a.length ? `<ul class="ph-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+function pintaProf() {
+  const ocultas = bancoActivo(S, true).filter(f => f.oculta && f.origen === 'commons').length, rep = S.repoInfo, ex = S.extraInfo;
+  $('profEstado').innerHTML = `<ul class="ph-ul"><li>Banco base (Wikimedia Commons): <b>${BANCO_COMMONS.length}</b> fotos${ocultas ? `, ${ocultas} oculta${ocultas === 1 ? '' : 's'}` : ''}.</li><li><code>banco-profesor.json</code> del repositorio: ${rep ? `<b>${rep.n}</b> foto${rep.n === 1 ? '' : 's'}${rep.titulo ? ' · «' + esc(rep.titulo) + '»' : ''}` : 'no se ha encontrado (opcional)'}.</li><li>JSON abierto a mano: ${ex ? `<b>${ex.n}</b> foto${ex.n === 1 ? '' : 's'}${ex.titulo ? ' · «' + esc(ex.titulo) + '»' : ''}` : 'ninguno'}.</li></ul>`;
+  const msgs = [...(rep?.errores || []).map(x => ['err', 'Repositorio: ' + x]), ...(rep?.avisos || []).map(x => ['av', 'Repositorio: ' + x]), ...(ex?.errores || []).map(x => ['err', 'JSON abierto: ' + x]), ...(ex?.avisos || []).map(x => ['av', 'JSON abierto: ' + x])];
+  $('profMsgs').innerHTML = msgs.length ? `<div class="aviso" style="margin-top:12px"><b>Revisa estos puntos</b> (las fotos con error no se cargan):<ul class="ph-ul">${msgs.map(([, x]) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+  $('profEjemplo').textContent = JSON.stringify(PLANTILLA_BANCO, null, 2);
+  pintaRevision(); pintaBorrador();
+}
+$('btnAbreJson').onclick = () => $('fileJson').click();
+$('fileJson').onchange = async e => {
+  const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+  try {
+    const v = validaBanco(JSON.parse(await file.text()));
+    S.extraFotos = v.fotos; S.extraAjustes = {corrige: v.corrige, ocultar: v.ocultar}; S.extraInfo = {titulo: v.titulo, autor: v.autor, n: v.fotos.length, errores: v.errores, avisos: v.avisos};
+    await guardaYa(); pintaProf(); toast(v.fotos.length ? `${v.fotos.length} foto(s) cargadas${v.errores.length ? ' · hay errores que revisar' : ''}` : 'No se cargó ninguna foto: revisa los errores', 6000);
+  } catch (err) { S.extraInfo = {n: 0, titulo: '', errores: ['No es un JSON válido: ' + err.message], avisos: []}; S.extraFotos = []; S.extraAjustes = null; pintaProf(); }
+};
+$('btnPlantilla').onclick = () => dl('banco-profesor.json', JSON.stringify(PLANTILLA_BANCO, null, 2), 'application/json');
+$('btnQuitaJson').onclick = async () => { S.extraFotos = []; S.extraAjustes = null; S.extraInfo = null; if (S.fotoId && !fotoActual() && S.fotoId !== 'propia') { S.fotoId = null; S.res = null; } await guardaYa(); pintaProf(); toast('JSON abierto quitado'); };
+function pintaRevision() {
+  const filas = bancoActivo(S, true).filter(f => f.origen === 'commons');
+  $('revision').innerHTML = `<table><thead><tr><th>Foto</th><th>Id</th><th>Etiqueta</th><th>Ocultar</th></tr></thead><tbody>${filas.map(f => `<tr><td><span class="ph-mini"><img src="${esc(urlFoto(f, 120))}" alt="" loading="lazy" data-ph="1"></span></td><td>${esc(f.id)}${(S.discrep || []).includes(f.id) ? ' <span class="fa-chip ph-warn" title="La IA no coincidió con la etiqueta">⚠ IA</span>' : ''}</td><td><select data-id="${esc(f.id)}" aria-label="Etiqueta de ${esc(f.id)}">${Object.entries(VOCAB[f.modo]).map(([k, [lab]]) => `<option value="${esc(k)}" ${k === f.etiqueta ? 'selected' : ''}>${esc(lab)}</option>`).join('')}</select>${f.corregida ? ' <span class="help">(corregida)</span>' : ''}</td><td><input type="checkbox" data-oc="${esc(f.id)}" ${f.oculta ? 'checked' : ''} aria-label="Ocultar ${esc(f.id)}"></td></tr>`).join('')}</tbody></table>`;
+}
+$('revision').addEventListener('change', e => {
+  const t = e.target, aj = S.ajustes || (S.ajustes = {ocultar: [], corrige: {}});
+  if (t.dataset.id) { const orig = BANCO_COMMONS.find(b => b[0] === t.dataset.id)[3]; if (t.value === orig) delete aj.corrige[t.dataset.id]; else aj.corrige[t.dataset.id] = t.value; }
+  if (t.dataset.oc) aj.ocultar = t.checked ? [...new Set([...aj.ocultar, t.dataset.oc])] : aj.ocultar.filter(x => x !== t.dataset.oc);
+  guardaYa(); pintaRevision();
+});
+/* búsqueda en Commons para ampliar el banco (el profesorado etiqueta lo que ve) */
+$('btnBusca').onclick = async () => {
+  const q = $('qBusca').value.trim(); if (q.length < 3) return toast('Escribe al menos 3 letras');
+  $('busEstado').innerHTML = '<span class="spin"></span> Buscando en Commons…'; BUS = [];
+  try { const r = await fetch(apiBuscaUrl(q)); if (!r.ok) throw new Error('Commons respondió ' + r.status); BUS = parseaBusqueda(await r.json()); $('busEstado').textContent = BUS.length ? `${BUS.length} resultado(s). Mira cada foto antes de etiquetarla.` : 'Sin resultados. Prueba en inglés (los títulos de Commons suelen estarlo).'; }
+  catch (e) { $('busEstado').textContent = 'No se pudo buscar ahora: ' + e.message; }
+  pintaBusqueda();
+};
+$('qBusca').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnBusca').click(); });
+$('selBModo').onchange = pintaBusqueda;
+function pintaBusqueda() {
+  const modo = $('selBModo').value;
+  $('busRes').innerHTML = BUS.map((x, i) => `<div class="ph-bus"><span class="ph-im"><img src="${esc(x.thumb)}" alt="" loading="lazy" data-ph="1"></span><small>${esc(x.commons.slice(0, 60))}</small><small class="help">${esc(x.autor || 'autoría: ver ficha')} · ${esc(x.licencia || 'licencia: ver ficha')}</small><select data-b="${i}" aria-label="Etiqueta">${Object.entries(VOCAB[modo]).map(([k, [lab]]) => `<option value="${esc(k)}">${esc(lab)}</option>`).join('')}</select><button class="btn btn-ghost btn-sm" type="button" data-add="${i}">Añadir</button></div>`).join('');
+}
+$('busRes').addEventListener('click', e => {
+  const b = e.target.closest('[data-add]'); if (!b) return; const i = +b.dataset.add, x = BUS[i]; if (!x) return;
+  const sel = $('busRes').querySelector(`select[data-b="${i}"]`), modo = $('selBModo').value;
+  if ((S.borrador || []).some(y => y.commons === x.commons)) return toast('Ya está en el borrador');
+  S.borrador = [...(S.borrador || []), {id: 'prof-' + String((S.borrador || []).length + 1).padStart(3, '0') + '-' + Date.now().toString(36).slice(-3), commons: x.commons, modo, etiqueta: sel.value, autoria: x.autor, licencia: x.licencia}];
+  guardaYa(); pintaBorrador(); toast('Añadida al borrador');
+});
+function pintaBorrador() {
+  const b = S.borrador || [];
+  $('borrador').innerHTML = b.length ? `<ul class="ph-ul">${b.map((x, i) => `<li>${esc(x.commons.slice(0, 70))} → <b>${esc(etiquetaDe(x.modo, x.etiqueta))}</b> <button class="btn btn-ghost btn-sm" type="button" data-del="${i}" aria-label="Quitar">×</button></li>`).join('')}</ul>` : '<p class="help">Aún no has añadido fotos al borrador.</p>';
+}
+$('borrador').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; S.borrador.splice(+b.dataset.del, 1); guardaYa(); pintaBorrador(); });
+$('btnJsonBorrador').onclick = () => dl('banco-profesor.json', bancoComoJSON(S, S.borrador || []), 'application/json');
+$('btnCreditos').onclick = async () => {
+  const todas = bancoActivo(S, true), nombres = todas.filter(f => f.commons).map(f => f.commons);
+  $('credEstado').innerHTML = '<span class="spin"></span> Leyendo Commons…';
+  try {
+    const m = await cargaMeta(nombres);
+    const filas = todas.filter(f => !f.propia).map(f => { const x = f.commons ? m[nombreCommons(f.commons)] : null; return [f.id, f.origen === 'commons' ? 'Wikimedia Commons' : 'Profesorado', f.commons || f.url || '(imagen incrustada)', etiquetaDe(f.modo, f.etiqueta), f.commons ? (x ? x.autor : 'NO ENCONTRADA EN COMMONS') : f.autoria, f.commons ? (x ? x.licencia : '') : f.licencia, x ? x.licUrl : '', f.commons ? (x ? x.pagina : paginaCommons(f.commons)) : '']; });
+    dl('creditos-phytodiagnostix.csv', csvDe(['id', 'origen', 'fichero_o_ruta', 'etiqueta', 'autoria', 'licencia', 'url_licencia', 'ficha'], filas), 'text/csv;charset=utf-8');
+    const faltan = filas.filter(r => r[4] === 'NO ENCONTRADA EN COMMONS').length;
+    $('credEstado').textContent = faltan ? `Descargado. ${faltan} foto(s) no se encontraron en Commons (renombradas o borradas): están marcadas en el CSV.` : 'Descargado.';
+  } catch (e) { $('credEstado').textContent = 'No se pudo leer Commons ahora: ' + e.message; }
+};
+
+/* ══ 5 · progreso ══ */
+function pintaProg() {
+  const p = S.progreso || PROG0(), distintas = new Set((p.hist || []).map(h => h.id)).size;
+  $('progResumen').innerHTML = p.n ? `<div class="ph-stats"><div><b>${p.n}</b><span>respuestas</span></div><div><b>${Math.round(100 * p.ok / p.n)} %</b><span>aciertos</span></div><div><b>${distintas}</b><span>fotos distintas (últimas 200)</span></div></div>${(() => { const pe = ['anatomia', 'deficiencia'].flatMap(m => peoresClaves(p, m).map(x => ({...x, modo: m}))).filter(x => x.pct < 1).sort((a, b) => a.pct - b.pct || b.n - a.n)[0]; return pe ? `<p class="help">Te conviene repasar: <b>${esc(etiquetaDe(pe.modo, pe.clave))}</b> (${pe.ok} de ${pe.n}).</p>` : '<p class="help">Sin fallos pendientes por ahora.</p>'; })()}` : '<p class="empty">Aún no has respondido a ninguna foto del banco.</p>';
+  const filas = [];
+  for (const modo of ['anatomia', 'deficiencia']) for (const [k, [lab]] of Object.entries(VOCAB[modo])) { const c = p.porClave[modo + ':' + k]; if (c) filas.push({lab, c, pct: c.ok / c.n}); }
+  $('progBarras').innerHTML = filas.length ? filas.sort((a, b) => a.pct - b.pct).map(x => `<div class="ph-bar-row"><span>${esc(x.lab)}</span><span class="ph-track" role="img" aria-label="${x.c.ok} de ${x.c.n}"><span style="width:${Math.round(100 * x.pct)}%"></span></span><small>${x.c.ok}/${x.c.n}</small></div>`).join('') : '<p class="empty">Todavía no hay datos.</p>';
+  const h = (p.hist || []).slice(0, 15);
+  $('progHist').innerHTML = h.length ? `<table><thead><tr><th>Fecha</th><th>Foto</th><th>Tu respuesta</th><th>Etiqueta</th><th></th></tr></thead><tbody>${h.map(x => `<tr><td>${esc(fechaCorta(x.t))}</td><td>${esc(x.id)}</td><td>${esc(x.resp)}</td><td>${esc(etiquetaDe(x.modo, x.etiqueta))}</td><td>${x.ok ? '✓' : '✗'}</td></tr>`).join('')}</tbody></table>` : '';
+  $('inNombre').value = S.nombre || '';
+}
+$('inNombre').addEventListener('input', e => { S.nombre = e.target.value; guarda(); });
+$('btnProgCsv').onclick = () => { const h = S.progreso?.hist || []; if (!h.length) return toast('Aún no hay respuestas'); dl('progreso-phytodiagnostix.csv', csvDe(['fecha', 'foto', 'modo', 'respuesta', 'etiqueta', 'acierto'], h.map(x => [new Date(x.t).toISOString(), x.id, x.modo, x.resp, etiquetaDe(x.modo, x.etiqueta), x.ok ? 'sí' : 'no'])), 'text/csv;charset=utf-8'); };
+$('btnProgWord').onclick = async () => {
+  const p = S.progreso; if (!p || !p.n) return toast('Aún no hay respuestas');
+  const por = []; for (const modo of ['anatomia', 'deficiencia']) for (const [k, [lab]] of Object.entries(VOCAB[modo])) { const c = p.porClave[modo + ':' + k]; if (c) por.push(`- ${lab}: ${c.ok} de ${c.n}`); }
+  const md = `## Resumen\n- Respuestas: ${p.n}\n- Aciertos: ${p.ok} (${Math.round(100 * p.ok / p.n)} %)\n\n## Por estructura\n${por.join('\n')}\n\n## Últimas respuestas\n${p.hist.slice(0, 30).map(x => `- ${fechaCorta(x.t)} · foto ${x.id} · respondiste «${x.resp}» · etiqueta ${etiquetaDe(x.modo, x.etiqueta)} · ${x.ok ? 'acierto' : 'fallo'}`).join('\n')}`;
+  try { dl('informe-phytodiagnostix.docx', await wordDeMarkdown(md, {titulo: APP_NAME + ' · informe de práctica', subtitulo: (S.nombre ? S.nombre + ' · ' : '') + new Date().toLocaleDateString('es-ES'), pie: 'Corrección por código con la etiqueta de cada foto. Fotos de Wikimedia Commons: autoría y licencia en la ficha de cada foto.'})); } catch (e) { toast('No se pudo crear el Word: ' + e.message, 7000); }
+};
+$('btnProgBorra').onclick = async () => { if (!confirm('¿Borrar todo tu progreso de este navegador?')) return; S.progreso = PROG0(); S.res = null; S.ia = null; await guardaYa(); pintaProg(); toast('Progreso borrado'); };
+
+/* ── arranque ── */
+(async () => {
+  const p = await cargaEstado(); if (p) S = {...S, ...p};
+  if (S.fotoId === 'propia') { S.fotoId = null; S.res = null; S.ia = null; }
+  S.progreso = S.progreso || PROG0(); S.ajustes = S.ajustes || {ocultar: [], corrige: {}};
+  await cargaBancoRepo();
+  if (S.fotoId && !fotoActual()) { S.fotoId = null; S.res = null; S.ia = null; }
+  iniciaUI(); go(0);
+})();
+
+</script>
+</body></html>
