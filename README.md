@@ -4,8 +4,6 @@ Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y ban
 
 **Usar la app:** https://fborrasumh.github.io/phytodiagnostix/
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23142093.svg)](https://doi.org/10.5281/zenodo.23142093)
-
 ## Qué hace
 
 - **Banco de 60 fotos de Wikimedia Commons**: 57 de anatomía histológica (colénquima, parénquima, esclerénquima, xilema, floema, estomas, epidermis y meristemo) y 3 de deficiencia foliar (nitrógeno). Cada foto se pide a Commons al mostrarla; su autoría y licencia se leen de la ficha de Commons y se enseñan debajo de la foto.
@@ -48,15 +46,15 @@ Con la propia clave de OpenAI, Google Gemini o Anthropic Claude. La clave se gua
 
 ## Autoría
 
-Fernando Borrás Rocher (Universidad Miguel Hernández de Elche).
+Fernando Borrás Rocher y María Emma García Pastor (Universidad Miguel Hernández de Elche).
 
-Parte del prototipo PhytoDiagnostix v1.0 (evaluación de microfotografías con IA), ampliado con banco de fotos de licencia libre, corrección por código y banco propio del profesorado.
+**Origen de la idea:** Idea original de María Emma García Pastor (PhytoDiagnostix v1.0: evaluación de microfotografías con IA), ampliada con banco de fotos de licencia libre, corrección por código y banco propio del profesorado.
 
-ORCID: Fernando Borrás Rocher [0000-0002-5519-4573](https://orcid.org/0000-0002-5519-4573)
+ORCID: Fernando Borrás Rocher [0000-0002-5519-4573](https://orcid.org/0000-0002-5519-4573) · María Emma García Pastor [0000-0002-4959-9419](https://orcid.org/0000-0002-4959-9419)
 
 ## Cómo citar
 
-Borrás Rocher, F. (2026). *PhytoDiagnostix* (v1.0.0) [Software]. DOI: [10.5281/zenodo.23142093](https://doi.org/10.5281/zenodo.23142093)
+Borrás Rocher, F., y García Pastor, M. E. (2026). *PhytoDiagnostix* (v1.1.0) [Software]. Zenodo. https://doi.org/10.5281/zenodo.23142093
 
 ## Licencia
 
