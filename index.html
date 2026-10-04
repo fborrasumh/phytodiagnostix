@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0F2237">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: blob: https://commons.wikimedia.org https://upload.wikimedia.org 'self'; media-src blob: data:; connect-src https://api.openai.com https://generativelanguage.googleapis.com https://api.anthropic.com 'self' https://commons.wikimedia.org https://upload.wikimedia.org; worker-src blob: https://cdnjs.cloudflare.com; base-uri 'none'; form-action 'none'">
-<meta name="author" content="Fernando Borrás Rocher">
+<meta name="author" content="Fernando Borrás Rocher; María Emma García Pastor">
 <meta name="description" content="Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y banco propio del profesorado">
 <title>PhytoDiagnostix · Entrena el ojo: anatomía vegetal y deficiencias foliares con fotos libres y banco propio del profesorado</title><link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -494,9 +494,10 @@ figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
     <p class="lede">Más de 50 microfotografías de licencia libre, etiquetadas y con su autoría. Eliges qué estructura ves; el código comprueba si aciertas y la IA, si quieres, te explica por qué. El profesorado puede añadir sus propias fotos con un fichero JSON.</p>
     <div class="actions"><button class="btn btn-primary btn-big" id="btnStart" type="button"><svg class="i"><use href="#i-play"/></svg>Empezar</button><button class="btn btn-ghost btn-big" id="btnEjemplo" type="button"><svg class="i"><use href="#i-eye"/></svg>Ver un ejemplo</button></div>
     <p class="fa-inicio" id="inicioProj"></p>
-    <div class="fa-autores"><span class="fa-autores-cap">Realizada por</span>
-      <div class="fa-autor"><span class="fa-av" style="--c:#E4572E">FB</span><div><b>Fernando Borrás Rocher</b><small>Universidad Miguel Hernández de Elche</small><a class="fa-orcid" href="https://orcid.org/0000-0002-5519-4573" target="_blank" rel="noopener">ORCID 0000-0002-5519-4573</a></div></div>
-      <p class="fa-idea">Parte del prototipo PhytoDiagnostix v1.0 (evaluación de microfotografías con IA), ampliado con banco de fotos de licencia libre, corrección por código y banco propio del profesorado.</p></div>
+    <div class="fa-autores"><span class="fa-autores-cap">Realizada entre</span>
+      <div class="fa-autor"><span class="fa-av" style="--c:#E4572E">FB</span><div><b>Fernando Borrás Rocher</b><small>Universidad Miguel Hernández de Elche</small><a class="fa-orcid" href="https://orcid.org/0000-0002-5519-4573" target="_blank" rel="noopener">ORCID 0000-0002-5519-4573</a></div></div><span class="fa-x">×</span>
+      <div class="fa-autor"><span class="fa-av" style="--c:#0E8C7A">ME</span><div><b>María Emma García Pastor</b><small>Universidad Miguel Hernández de Elche</small><a class="fa-orcid" href="https://orcid.org/0000-0002-4959-9419" target="_blank" rel="noopener">ORCID 0000-0002-4959-9419</a></div></div>
+      <p class="fa-idea">Idea original de María Emma García Pastor (PhytoDiagnostix v1.0: evaluación de microfotografías con IA), ampliada con banco de fotos de licencia libre, corrección por código y banco propio del profesorado.</p></div>
   </div>
   <h2 class="sec-title">Cómo funciona</h2>
   <div class="journey" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
@@ -511,6 +512,7 @@ figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
 
 <!-- 1 · ELEGIR FOTO -->
 <section class="screen" data-step="1">
+  <div class="aviso ph-avisofotos" hidden role="alert"><b>No se están cargando las fotos de Wikimedia Commons.</b> Puede ser la conexión, un bloqueador de contenido o que estés viendo la app dentro de un visor que bloquea imágenes externas (por ejemplo, la vista previa de un chat). Ábrela desde su dirección publicada, <a href="https://fborrasumh.github.io/phytodiagnostix/" target="_blank" rel="noopener">fborrasumh.github.io/phytodiagnostix</a>, en el navegador. <button class="btn btn-ghost btn-sm ph-reintenta" type="button">Reintentar</button></div>
   <header class="sh" style="--c:#6B4FD8"><div class="sh-ico"><svg class="i"><use href="#i-eye"/></svg></div><div><p class="sh-step">Paso 1 de 3</p><h2>Elige una foto</h2><p class="sh-lede">Las fotos no muestran su etiqueta: tendrás que decidir tú qué ves. Después el código te dirá si has acertado.</p></div></header>
   <div class="card">
     <div class="ph-bar">
@@ -525,9 +527,10 @@ figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
 
 <!-- 2 · OBSERVAR Y RESPONDER -->
 <section class="screen" data-step="2">
+  <div class="aviso ph-avisofotos" hidden role="alert"><b>No se están cargando las fotos de Wikimedia Commons.</b> Puede ser la conexión, un bloqueador de contenido o que estés viendo la app dentro de un visor que bloquea imágenes externas (por ejemplo, la vista previa de un chat). Ábrela desde su dirección publicada, <a href="https://fborrasumh.github.io/phytodiagnostix/" target="_blank" rel="noopener">fborrasumh.github.io/phytodiagnostix</a>, en el navegador. <button class="btn btn-ghost btn-sm ph-reintenta" type="button">Reintentar</button></div>
   <header class="sh" style="--c:#E4572E"><div class="sh-ico"><svg class="i"><use href="#i-pencil"/></svg></div><div><p class="sh-step">Paso 2 de 3</p><h2>Observa y responde</h2><p class="sh-lede" id="obsLede">Mira la foto con calma. Marca lo que ves y di qué es.</p></div></header>
   <div class="ph-obs">
-    <div class="card ph-fig"><figure id="figura"><img id="phImg" alt="Microfotografía para identificar" decoding="async"><figcaption id="phCap"></figcaption></figure><div class="actions" style="margin-top:8px"><button class="btn btn-ghost btn-sm" id="btnZoom" type="button"><svg class="i"><use href="#i-eye"/></svg>Ampliar</button></div></div>
+    <div class="card ph-fig"><figure id="figura"><img id="phImg" alt="Microfotografía para identificar" decoding="async" referrerpolicy="no-referrer"><figcaption id="phCap"></figcaption></figure><div class="actions" style="margin-top:8px"><button class="btn btn-ghost btn-sm" id="btnZoom" type="button"><svg class="i"><use href="#i-eye"/></svg>Ampliar</button></div></div>
     <div class="card">
       <h3 id="tPregunta">¿Qué estructura ves?</h3>
       <div class="ph-ops" id="ops" role="group" aria-label="Opciones"></div>
@@ -580,7 +583,7 @@ figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
 </section>
 </main>
 
-<footer class="fa-foot"><hr><p><b>PhytoDiagnostix</b> · Fernando Borrás Rocher · Universidad Miguel Hernández de Elche. Herramienta de apoyo: la IA puede equivocarse y la decisión final es tuya. Tus datos se guardan solo en este navegador.</p></footer>
+<footer class="fa-foot"><hr><p><b>PhytoDiagnostix</b> · Fernando Borrás Rocher y María Emma García Pastor · Universidad Miguel Hernández de Elche. Herramienta de apoyo: la IA puede equivocarse y la decisión final es tuya. Tus datos se guardan solo en este navegador.</p></footer>
 <div class="bottomnav"><div class="bn-in"><button class="btn btn-ghost" id="navBack" type="button"><svg class="i"><use href="#i-left"/></svg>Atrás</button><div class="bn-hint" id="navHint"></div><button class="btn btn-primary" id="navNext" type="button"><span id="navNextTxt">Siguiente</span><svg class="i"><use href="#i-right"/></svg></button></div></div>
 
 <div class="modal" id="mIA" role="dialog" aria-modal="true" aria-labelledby="mIAT"><div class="modal-box"><div class="modal-head"><h2 id="mIAT">Inteligencia artificial</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body">
@@ -591,7 +594,7 @@ figure.ph-sin,.ph-bth.ph-sin{position:relative;min-height:160px}
   <p class="help" id="iaEstado">La clave se guarda solo en este navegador y se envía únicamente a tu proveedor. Cada persona usa la suya y paga su propio uso. Elige un modelo económico: este uso no necesita el más potente.</p></div></div></div>
 <div class="modal" id="mEnvio" role="dialog" aria-modal="true" aria-labelledby="mEnT"><div class="modal-box"><div class="modal-head"><h2 id="mEnT">Esto es lo que saldría hacia tu proveedor de IA</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><div id="envioInfo"></div><img id="envioImg" class="ph-envio" alt="Imagen que se enviaría" hidden><pre class="fa-pre" id="envioTxt"></pre><label class="fa-chk" style="margin:12px 0"><input type="checkbox" id="envioOk"> He revisado la muestra y confirmo que puede salir de mi ordenador.</label><div class="actions"><button class="btn btn-primary" id="envioSi" type="button" disabled>Enviar y analizar</button><button class="btn btn-ghost" id="envioNo" type="button">Cancelar</button></div></div></div></div>
 <div class="modal" id="mHelp" role="dialog" aria-modal="true" aria-labelledby="mHelpT"><div class="modal-box"><div class="modal-head"><h2 id="mHelpT">Ayuda</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><div class="glos" id="glos"></div></div></div></div>
-<div class="modal" id="mZoom" role="dialog" aria-modal="true" aria-label="Foto ampliada"><div class="modal-box ph-zoom"><div class="modal-head"><h2>Foto ampliada</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><img id="zoomImg" alt="Microfotografía ampliada"></div></div></div>
+<div class="modal" id="mZoom" role="dialog" aria-modal="true" aria-label="Foto ampliada"><div class="modal-box ph-zoom"><div class="modal-head"><h2>Foto ampliada</h2><button type="button" data-close>Cerrar</button></div><div class="modal-body"><img id="zoomImg" alt="Microfotografía ampliada" referrerpolicy="no-referrer"></div></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>const APP="phytodiagnostix";const APP_NAME="PhytoDiagnostix";const LOGO_ICON="leaf";
@@ -1074,6 +1077,31 @@ const nombreCommons = f => String(f).replace(/^(?:File|Archivo):/i, '').replace(
 const urlCommons = (f, ancho = 640) => `${COMMONS}/wiki/Special:FilePath/${encodeURIComponent(nombreCommons(f).replace(/ /g, '_'))}?width=${ancho}`;
 const paginaCommons = f => `${COMMONS}/wiki/File:${encodeURIComponent(nombreCommons(f).replace(/ /g, '_'))}`;
 
+
+/* ── rutas de respaldo para las fotos de Commons: si la redirección de Special:FilePath falla, se prueba la ruta directa de upload.wikimedia.org ── */
+function md5hex(str) {
+  const m = new TextEncoder().encode(str), n = m.length, nb = ((n + 8) >> 6) + 1, W = new Uint32Array(nb * 16);
+  for (let i = 0; i < n; i++) W[i >> 2] |= m[i] << ((i % 4) * 8);
+  W[n >> 2] |= 0x80 << ((n % 4) * 8); W[nb * 16 - 2] = (n * 8) >>> 0; W[nb * 16 - 1] = Math.floor(n * 8 / 4294967296);
+  const R = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  const K = Array.from({length: 64}, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296) >>> 0);
+  let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+  for (let o = 0; o < nb * 16; o += 16) {
+    let A = a0, B = b0, C = c0, D = d0;
+    for (let i = 0; i < 64; i++) {
+      let F, g;
+      if (i < 16) { F = (B & C) | (~B & D); g = i; } else if (i < 32) { F = (D & B) | (~D & C); g = (5 * i + 1) % 16; } else if (i < 48) { F = B ^ C ^ D; g = (3 * i + 5) % 16; } else { F = C ^ (B | ~D); g = (7 * i) % 16; }
+      F = (F + A + K[i] + W[o + g]) >>> 0; A = D; D = C; C = B; B = (B + ((F << R[i]) | (F >>> (32 - R[i])))) >>> 0;
+    }
+    a0 = (a0 + A) >>> 0; b0 = (b0 + B) >>> 0; c0 = (c0 + C) >>> 0; d0 = (d0 + D) >>> 0;
+  }
+  return [a0, b0, c0, d0].map(v => [0, 8, 16, 24].map(sh => ((v >>> sh) & 255).toString(16).padStart(2, '0')).join('')).join('');
+}
+function alternativasCommons(f, ancho = 640) {
+  const u = nombreCommons(f).replace(/ /g, '_'), e = encodeURIComponent(u), h = md5hex(u), ruta = `${h[0]}/${h.slice(0, 2)}/${e}`;
+  return [`${COMMONS}/wiki/Special:Redirect/file/${e}?width=${ancho}`, `https://upload.wikimedia.org/wikipedia/commons/thumb/${ruta}/${ancho}px-${e}`, `https://upload.wikimedia.org/wikipedia/commons/${ruta}`];
+}
+
 /* ── vocabulario y corrección ── */
 const claveValida = (modo, k) => !!(VOCAB[modo] && Object.prototype.hasOwnProperty.call(VOCAB[modo], k));
 const etiquetaDe = (modo, k) => (VOCAB[modo] && VOCAB[modo][k] ? VOCAB[modo][k][0] : String(k));
@@ -1254,7 +1282,17 @@ const listaFiltrada = () => bancoActivo().filter(f => f.modo === S.modo && (S.or
 const fotoActual = () => S.fotoId === 'propia' ? PROPIA : (S.fotoId ? fotoPorId(S.fotoId) : null);
 const nombreOrigen = f => f.propia ? 'Tu foto' : f.origen === 'commons' ? 'Wikimedia Commons' : 'Mi profesorado';
 const fechaCorta = t => new Date(t).toLocaleString('es-ES', {day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'});
-document.addEventListener('error', e => { const t = e.target; if (t && t.tagName === 'IMG' && t.dataset.ph) { t.hidden = true; const w = t.closest('.ph-im, figure, .ph-zoomwrap, .ph-bth'); if (w) w.classList.add('ph-sin'); } }, true);
+let IMG_OK = 0, IMG_KO = 0;
+const dataCm = (f, w) => f.commons ? ` data-cm="${esc(f.commons)}" data-w="${w}"` : '';
+function ponImg(img, f, w) { img.dataset.ph = '1'; img.dataset.i = '0'; if (f.commons) { img.dataset.cm = f.commons; img.dataset.w = String(w); } else { delete img.dataset.cm; } img.hidden = false; img.referrerPolicy = 'no-referrer'; img.src = urlFoto(f, w); }
+function avisoFotos() { $$('.ph-avisofotos').forEach(a => { a.hidden = !(IMG_KO >= 4 && IMG_OK === 0); }); }
+document.addEventListener('load', e => { const t = e.target; if (t && t.tagName === 'IMG' && t.dataset.ph && t.dataset.cm && t.naturalWidth) { IMG_OK++; avisoFotos(); } }, true);
+document.addEventListener('error', e => {
+  const t = e.target; if (!t || t.tagName !== 'IMG' || !t.dataset.ph) return;
+  if (t.dataset.cm) { const alts = alternativasCommons(t.dataset.cm, +t.dataset.w || 640), i = +(t.dataset.i || 0); if (i < alts.length) { t.dataset.i = String(i + 1); t.src = alts[i]; return; } }
+  t.hidden = true; if (t.dataset.cm) IMG_KO++; const w = t.closest('.ph-im, figure, .ph-zoomwrap, .ph-bth, .ph-mini'); if (w) w.classList.add('ph-sin'); avisoFotos();
+}, true);
+document.addEventListener('click', e => { if (e.target.closest('.ph-reintenta')) { IMG_KO = 0; IMG_OK = 0; avisoFotos(); $$('img[data-ph]').forEach(im => { if (im.dataset.cm) { im.dataset.i = '0'; im.hidden = false; im.closest('.ph-sin')?.classList.remove('ph-sin'); im.src = urlCommons(im.dataset.cm, +im.dataset.w || 640); } }); } });
 
 /* ── metadatos de Commons (autoría y licencia): se leen de la API, nunca se afirman de memoria ── */
 const META_K = APP + '_meta';
@@ -1312,7 +1350,7 @@ function pintaGaleria() {
   $('galInfo').textContent = `${l.length} foto${l.length === 1 ? '' : 's'} de ${MODOS[S.modo].toLowerCase()}.` + (l.length && tipos < 3 ? ` Solo hay ${tipos} tipo${tipos === 1 ? '' : 's'} de respuesta correcta en esta selección: el profesorado puede ampliar el banco con su JSON.` : '');
   $('galeria').innerHTML = l.length ? l.map((f, i) => {
     const h = ultimoResultado(S.progreso, f.id);
-    return `<button type="button" class="ph-th" data-id="${esc(f.id)}" aria-label="Foto ${i + 1}${h ? (h.ok ? ', acertada' : ', fallada') : ''}"><span class="ph-im"><img src="${esc(urlFoto(f, 320))}" alt="" loading="lazy" decoding="async" data-ph="1"></span><span class="ph-n">${i + 1}</span>${h ? `<span class="ph-mk ${h.ok ? 'ok' : 'ko'}">${h.ok ? '✓' : '✗'}</span>` : ''}${f.origen === 'profesor' ? '<span class="ph-or">Prof.</span>' : ''}</button>`;
+    return `<button type="button" class="ph-th" data-id="${esc(f.id)}" aria-label="Foto ${i + 1}${h ? (h.ok ? ', acertada' : ', fallada') : ''}"><span class="ph-im"><img src="${esc(urlFoto(f, 320))}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-ph="1"${dataCm(f, 320)}></span><span class="ph-n">${i + 1}</span>${h ? `<span class="ph-mk ${h.ok ? 'ok' : 'ko'}">${h.ok ? '✓' : '✗'}</span>` : ''}${f.origen === 'profesor' ? '<span class="ph-or">Prof.</span>' : ''}</button>`;
   }).join('') : '<p class="empty">No hay fotos con este filtro. Cambia el origen o añade fotos desde «Profesorado».</p>';
 }
 $$('#segModo button').forEach(b => b.onclick = () => { S.modo = b.dataset.modo; guarda(); pintaGaleria(); });
@@ -1350,7 +1388,7 @@ async function bitmapADataJpeg(blob, max) {
 function pintaObservar() {
   const f = fotoActual();
   if (!f) { setTimeout(() => go(1)); return; }
-  const im = $('phImg'); im.dataset.ph = '1'; im.hidden = false; im.closest('figure').classList.remove('ph-sin'); im.src = urlFoto(f, 900);
+  const im = $('phImg'); im.closest('figure').classList.remove('ph-sin'); ponImg(im, f, 900);
   const n = f.propia ? 0 : listaFiltrada().findIndex(x => x.id === f.id) + 1;
   $('phCap').textContent = f.propia ? 'Tu microfotografía (sin etiqueta)' : `${n ? 'Foto ' + n + ' · ' : ''}${nombreOrigen(f)}${f.aumento ? ' · ' + f.aumento : ''}${f.tincion ? ' · ' + f.tincion : ''}`;
   $('tPregunta').textContent = f.modo === 'anatomia' ? '¿Qué tejido o estructura ves?' : '¿Qué carencia sospechas?';
@@ -1365,7 +1403,7 @@ $('ops').addEventListener('click', e => { const b = e.target.closest('.ph-op'); 
 $('resp').addEventListener('input', () => { S.resp = $('resp').value; marcaOps(); guarda(); });
 $('desc').addEventListener('input', () => { S.desc = $('desc').value; guarda(); });
 $('obsl').addEventListener('change', () => { S.obs = $$('#obsl input:checked').map(i => i.value); guarda(); });
-$('btnZoom').onclick = () => { const f = fotoActual(); if (!f) return; const z = $('zoomImg'); z.dataset.ph = '1'; z.hidden = false; z.src = urlFoto(f, 1600); $('mZoom').classList.add('on'); };
+$('btnZoom').onclick = () => { const f = fotoActual(); if (!f) return; const z = $('zoomImg'); z.closest('.modal-body').classList.remove('ph-sin'); ponImg(z, f, 1600); $('mZoom').classList.add('on'); };
 
 $('btnComprobar').onclick = async () => {
   if (busy) return; const f = fotoActual(); if (!f) return go(1);
@@ -1398,7 +1436,7 @@ function pintaResultado() {
   if (r.estado === 'correcta') h += `<div class="okbox"><b>✓ Correcto.</b> Es ${esc(E(r.clave))}${r.alternativa ? ` (también se acepta; la etiqueta principal de esta foto es ${esc(E(f.etiqueta))})` : ''}.</div>`;
   else if (r.estado === 'incorrecta') h += `<div class="aviso"><b>✗ No es ${esc(E(r.clave))}.</b> La etiqueta de esta foto es <b>${esc(E(f.etiqueta))}</b>.</div>`;
   else h += `<div class="aviso">Tu foto no tiene etiqueta, así que el código no puede darte un veredicto. Tu respuesta fue <b>${esc(E(r.clave))}</b>; abajo tienes la pista de la IA, que puede equivocarse.</div>`;
-  h += `<div class="card ph-res"><figure class="ph-bth"><img src="${esc(urlFoto(f, 480))}" alt="Foto evaluada" data-ph="1"></figure><div>`;
+  h += `<div class="card ph-res"><figure class="ph-bth"><img src="${esc(urlFoto(f, 480))}" alt="Foto evaluada" referrerpolicy="no-referrer" data-ph="1"${dataCm(f, 480)}></figure><div>`;
   if (!f.propia) {
     if (f.titulo) h += `<p><b>${esc(f.titulo)}</b>${f.especie ? ' · <i>' + esc(f.especie) + '</i>' : ''}</p>`;
     if (f.nota) h += `<p class="help">Nota del profesorado: ${esc(f.nota)}</p>`;
@@ -1504,7 +1542,7 @@ $('btnPlantilla').onclick = () => dl('banco-profesor.json', JSON.stringify(PLANT
 $('btnQuitaJson').onclick = async () => { S.extraFotos = []; S.extraAjustes = null; S.extraInfo = null; if (S.fotoId && !fotoActual() && S.fotoId !== 'propia') { S.fotoId = null; S.res = null; } await guardaYa(); pintaProf(); toast('JSON abierto quitado'); };
 function pintaRevision() {
   const filas = bancoActivo(S, true).filter(f => f.origen === 'commons');
-  $('revision').innerHTML = `<table><thead><tr><th>Foto</th><th>Id</th><th>Etiqueta</th><th>Ocultar</th></tr></thead><tbody>${filas.map(f => `<tr><td><span class="ph-mini"><img src="${esc(urlFoto(f, 120))}" alt="" loading="lazy" data-ph="1"></span></td><td>${esc(f.id)}${(S.discrep || []).includes(f.id) ? ' <span class="fa-chip ph-warn" title="La IA no coincidió con la etiqueta">⚠ IA</span>' : ''}</td><td><select data-id="${esc(f.id)}" aria-label="Etiqueta de ${esc(f.id)}">${Object.entries(VOCAB[f.modo]).map(([k, [lab]]) => `<option value="${esc(k)}" ${k === f.etiqueta ? 'selected' : ''}>${esc(lab)}</option>`).join('')}</select>${f.corregida ? ' <span class="help">(corregida)</span>' : ''}</td><td><input type="checkbox" data-oc="${esc(f.id)}" ${f.oculta ? 'checked' : ''} aria-label="Ocultar ${esc(f.id)}"></td></tr>`).join('')}</tbody></table>`;
+  $('revision').innerHTML = `<table><thead><tr><th>Foto</th><th>Id</th><th>Etiqueta</th><th>Ocultar</th></tr></thead><tbody>${filas.map(f => `<tr><td><span class="ph-mini"><img src="${esc(urlFoto(f, 120))}" alt="" loading="lazy" referrerpolicy="no-referrer" data-ph="1"${dataCm(f, 120)}></span></td><td>${esc(f.id)}${(S.discrep || []).includes(f.id) ? ' <span class="fa-chip ph-warn" title="La IA no coincidió con la etiqueta">⚠ IA</span>' : ''}</td><td><select data-id="${esc(f.id)}" aria-label="Etiqueta de ${esc(f.id)}">${Object.entries(VOCAB[f.modo]).map(([k, [lab]]) => `<option value="${esc(k)}" ${k === f.etiqueta ? 'selected' : ''}>${esc(lab)}</option>`).join('')}</select>${f.corregida ? ' <span class="help">(corregida)</span>' : ''}</td><td><input type="checkbox" data-oc="${esc(f.id)}" ${f.oculta ? 'checked' : ''} aria-label="Ocultar ${esc(f.id)}"></td></tr>`).join('')}</tbody></table>`;
 }
 $('revision').addEventListener('change', e => {
   const t = e.target, aj = S.ajustes || (S.ajustes = {ocultar: [], corrige: {}});
@@ -1524,7 +1562,7 @@ $('qBusca').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnBusc
 $('selBModo').onchange = pintaBusqueda;
 function pintaBusqueda() {
   const modo = $('selBModo').value;
-  $('busRes').innerHTML = BUS.map((x, i) => `<div class="ph-bus"><span class="ph-im"><img src="${esc(x.thumb)}" alt="" loading="lazy" data-ph="1"></span><small>${esc(x.commons.slice(0, 60))}</small><small class="help">${esc(x.autor || 'autoría: ver ficha')} · ${esc(x.licencia || 'licencia: ver ficha')}</small><select data-b="${i}" aria-label="Etiqueta">${Object.entries(VOCAB[modo]).map(([k, [lab]]) => `<option value="${esc(k)}">${esc(lab)}</option>`).join('')}</select><button class="btn btn-ghost btn-sm" type="button" data-add="${i}">Añadir</button></div>`).join('');
+  $('busRes').innerHTML = BUS.map((x, i) => `<div class="ph-bus"><span class="ph-im"><img src="${esc(x.thumb)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-ph="1"></span><small>${esc(x.commons.slice(0, 60))}</small><small class="help">${esc(x.autor || 'autoría: ver ficha')} · ${esc(x.licencia || 'licencia: ver ficha')}</small><select data-b="${i}" aria-label="Etiqueta">${Object.entries(VOCAB[modo]).map(([k, [lab]]) => `<option value="${esc(k)}">${esc(lab)}</option>`).join('')}</select><button class="btn btn-ghost btn-sm" type="button" data-add="${i}">Añadir</button></div>`).join('');
 }
 $('busRes').addEventListener('click', e => {
   const b = e.target.closest('[data-add]'); if (!b) return; const i = +b.dataset.add, x = BUS[i]; if (!x) return;
